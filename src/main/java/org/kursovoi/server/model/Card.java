@@ -16,7 +16,6 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String number;
     private String holderName;
     private LocalDate dateOfExpire;
     private String cvv;

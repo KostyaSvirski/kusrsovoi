@@ -3,16 +3,16 @@ package org.kursovoi.server.util.mapper;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.constants.Currency;
-import org.kursovoi.server.model.constants.Status;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 @Mapper
+@Component
 public interface AccountMapper {
 
     @Mapping(target = "dateOfIssue", source = "account.dateOfIssue", dateFormat = "yyyy-MM-dd")

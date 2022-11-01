@@ -33,8 +33,9 @@ public class AccountService {
     }
 
     @Transactional
-    public List<AccountDto> getAccountOfUser(long id) {
-        return accountRepository.findByUserId(id).stream().map(mapper::map).collect(Collectors.toList());
+    public List<AccountDto> getAccountsOfUser(long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        return accountRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
@@ -71,9 +72,14 @@ public class AccountService {
     }
 
     @Transactional
-    public Account getSpecificAccount(long id) {
+    Account getSpecificAccount(long id) {
         return accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account with id " + id + " not found!"));
+    }
+
+    @Transactional
+    public AccountDto getSpecificAccountDto(long id) {
+        return mapper.map(getSpecificAccount(id));
     }
 
 
