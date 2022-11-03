@@ -1,7 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
-import org.kursovoi.server.model.constants.OperationType;
+import org.kursovoi.server.model.constant.OperationType;
 
 import javax.persistence.*;
 

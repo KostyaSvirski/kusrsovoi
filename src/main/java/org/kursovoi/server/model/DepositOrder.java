@@ -1,7 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
-import org.kursovoi.server.model.constants.DepositOrderStatus;
+import org.kursovoi.server.model.constant.DepositOrderStatus;
 
 import javax.persistence.*;
 

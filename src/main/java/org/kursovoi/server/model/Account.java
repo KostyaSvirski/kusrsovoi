@@ -1,8 +1,8 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
-import org.kursovoi.server.model.constants.Currency;
-import org.kursovoi.server.model.constants.Status;
+import org.kursovoi.server.model.constant.Currency;
+import org.kursovoi.server.model.constant.Status;
 
 import javax.persistence.*;
 import java.time.LocalDate;

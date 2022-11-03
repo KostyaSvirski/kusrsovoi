@@ -1,9 +1,9 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
-import org.kursovoi.server.model.constants.CardIssuer;
-import org.kursovoi.server.model.constants.CardType;
-import org.kursovoi.server.model.constants.Status;
+import org.kursovoi.server.model.constant.CardIssuer;
+import org.kursovoi.server.model.constant.CardType;
+import org.kursovoi.server.model.constant.Status;
 
 import javax.persistence.*;
 import java.time.LocalDate;

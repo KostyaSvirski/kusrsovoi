@@ -1,4 +1,4 @@
-package org.kursovoi.server.model.constants;
+package org.kursovoi.server.model.constant;
 
 import lombok.Getter;
 

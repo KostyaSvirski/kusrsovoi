@@ -1,7 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
-import org.kursovoi.server.model.constants.LoanOrderStatus;
+import org.kursovoi.server.model.constant.LoanOrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;

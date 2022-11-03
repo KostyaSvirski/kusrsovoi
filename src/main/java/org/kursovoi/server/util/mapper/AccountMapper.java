@@ -2,7 +2,7 @@ package org.kursovoi.server.util.mapper;
 
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.model.Account;
-import org.kursovoi.server.model.constants.Currency;
+import org.kursovoi.server.model.constant.Currency;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

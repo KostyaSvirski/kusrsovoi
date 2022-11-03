@@ -1,7 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
-import org.kursovoi.server.model.constants.Currency;
+import org.kursovoi.server.model.constant.Currency;
 
 import javax.persistence.*;
 import java.util.List;

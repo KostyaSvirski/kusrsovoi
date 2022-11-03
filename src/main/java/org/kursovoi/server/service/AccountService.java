@@ -1,17 +1,16 @@
 package org.kursovoi.server.service;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.dto.TransactionDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
-import org.kursovoi.server.model.constants.Status;
+import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
-import org.kursovoi.server.repository.UserRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
 import org.kursovoi.server.util.exception.AccountNotFoundException;
 import org.kursovoi.server.util.exception.TransactionSumToBigException;
-import org.kursovoi.server.util.exception.UserNotFoundException;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +20,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@RequiredArgsConstructor
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AccountMapper mapper;
 
     @Transactional
@@ -34,7 +34,7 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> getAccountsOfUser(long id) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userService.getUser(id);
         return accountRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
@@ -42,8 +42,7 @@ public class AccountService {
     public void createAccount(AccountDto dto) {
         Account newAccount = mapper.map(dto);
         newAccount.setStatus(Status.ACTIVE);
-        User user = userRepository.findById(dto.getHolderId())
-                .orElseThrow(() -> new UserNotFoundException("User with id " + dto.getHolderId() + " not found!"));
+        User user = userService.getUser(dto.getHolderId());
         newAccount.setHolder(user);
         accountRepository.saveAndFlush(newAccount);
     }

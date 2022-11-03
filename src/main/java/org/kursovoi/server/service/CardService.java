@@ -1,12 +1,13 @@
 package org.kursovoi.server.service;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.ActivateCardDto;
 import org.kursovoi.server.dto.CardDto;
 import org.kursovoi.server.dto.ChangeStatusOfCardDto;
 import org.kursovoi.server.dto.CreateCardDto;
 import org.kursovoi.server.model.Card;
-import org.kursovoi.server.model.constants.Status;
+import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.CardRepository;
 import org.kursovoi.server.util.exception.CardNotFoundException;
 import org.kursovoi.server.util.mapper.CardMapper;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@RequiredArgsConstructor
 public class CardService {
 
     private final CardRepository cardRepository;
