@@ -1,6 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.Status;
 
 import javax.persistence.*;
@@ -24,19 +25,24 @@ public class User {
     private Status status;
     private String email;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role role;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LoanOrder> loanOrders;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Operation> operations;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<DepositOrder> depositOrders;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "holder", fetch = FetchType.LAZY)
     private List<Account> accounts;
 }

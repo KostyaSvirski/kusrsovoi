@@ -1,6 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.Currency;
 import org.kursovoi.server.model.constant.Status;
 
@@ -21,10 +22,12 @@ public class Account {
     private Currency currency;
     private Status status;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User holder;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Card> cards;
 }

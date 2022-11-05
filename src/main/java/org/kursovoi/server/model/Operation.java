@@ -1,6 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.OperationType;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class Operation {
     private OperationType type;
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;

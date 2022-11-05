@@ -1,6 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.CardIssuer;
 import org.kursovoi.server.model.constant.CardType;
 import org.kursovoi.server.model.constant.Status;
@@ -24,6 +25,7 @@ public class Card {
     private CardIssuer cardIssuer;
     private CardType type;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_account")
     private Account account;

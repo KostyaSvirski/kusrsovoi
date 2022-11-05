@@ -1,6 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.LoanOrderStatus;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class LoanOrder {
     private long sum;
     private LoanOrderStatus status;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;

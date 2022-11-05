@@ -1,6 +1,7 @@
 package org.kursovoi.server.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.Currency;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Loan {
     private long monthsToReturn;
     private Currency currency;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY)
     private List<LoanOrder> loanOrders;
 }
