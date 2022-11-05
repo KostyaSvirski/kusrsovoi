@@ -42,7 +42,7 @@ public class UserService {
 
     @Transactional
     public void createUser(CreateUserDto userDto) {
-        if (userRepository.findOptionalByLogin(userDto.getLogin()).isPresent()) {
+        if (userRepository.findByLogin(userDto.getLogin()).isPresent()) {
             throw new UserAlreadyExistsException("User with login: " + userDto.getLogin() + " - already exist");
         }
         if (!userDto.getPassword().equals(userDto.getRepeatPassword())) {
@@ -66,12 +66,12 @@ public class UserService {
 
     @Transactional
     public void deleteUser(long id) {
-        userRepository.deleteById(id);
+        userRepository.delete(getUser(id));
     }
 
     @Transactional
     public UserDto authenticate(AuthRequestDto request) {
-        User user = userRepository.findOptionalByLogin(request.getLogin())
+        User user = userRepository.findByLogin(request.getLogin())
                 .orElseThrow(() -> new UserNotFoundException("User with login: " + request.getLogin() + " - not found!"));
         if (!user.getPassword().equals(request.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");

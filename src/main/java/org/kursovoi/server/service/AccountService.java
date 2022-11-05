@@ -35,7 +35,7 @@ public class AccountService {
     @Transactional
     public List<AccountDto> getAccountsOfUser(long id) {
         User user = userService.getUser(id);
-        return accountRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
+        return accountRepository.findByHolder(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
