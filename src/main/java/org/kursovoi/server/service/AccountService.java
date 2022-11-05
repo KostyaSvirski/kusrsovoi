@@ -9,7 +9,7 @@ import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
-import org.kursovoi.server.util.exception.AccountNotFoundException;
+import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.TransactionSumToBigException;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class AccountService {
     @Transactional
     Account getSpecificAccount(long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFoundException("Account with id " + id + " not found!"));
+                .orElseThrow(() -> new ModelNotFoundException("Account with id " + id + " not found!"));
     }
 
     @Transactional

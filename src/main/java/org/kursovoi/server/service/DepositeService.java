@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.DepositDto;
 import org.kursovoi.server.model.Deposit;
 import org.kursovoi.server.repository.DepositRepository;
-import org.kursovoi.server.util.exception.DepositNotFoundException;
+import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.DepositMapper;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +38,6 @@ public class DepositeService {
 
     Deposit findSpecificDeposit(long id) {
         return depositRepository.findById(id)
-                .orElseThrow(() -> new DepositNotFoundException("Deposit with id: " + id + " - not found!"));
+                .orElseThrow(() -> new ModelNotFoundException("Deposit with id: " + id + " - not found!"));
     }
 }

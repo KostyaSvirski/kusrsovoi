@@ -12,8 +12,8 @@ import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.UserRepository;
 import org.kursovoi.server.util.exception.IncorrectPasswordException;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
+import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.UserAlreadyExistsException;
-import org.kursovoi.server.util.exception.UserNotFoundException;
 import org.kursovoi.server.util.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +72,7 @@ public class UserService {
     @Transactional
     public UserDto authenticate(AuthRequestDto request) {
         User user = userRepository.findByLogin(request.getLogin())
-                .orElseThrow(() -> new UserNotFoundException("User with login: " + request.getLogin() + " - not found!"));
+                .orElseThrow(() -> new ModelNotFoundException("User with login: " + request.getLogin() + " - not found!"));
         if (!user.getPassword().equals(request.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
@@ -82,7 +82,7 @@ public class UserService {
     @Transactional
     User getUser(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " - not found!"));
+                .orElseThrow(() -> new ModelNotFoundException("User with id: " + id + " - not found!"));
     }
 
 }

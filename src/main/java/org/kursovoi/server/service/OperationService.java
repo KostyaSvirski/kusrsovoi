@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.OperationDto;
 import org.kursovoi.server.model.Operation;
 import org.kursovoi.server.repository.OperationRepository;
-import org.kursovoi.server.util.exception.OperationNotFoundException;
+import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.OperationMapper;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +38,6 @@ public class OperationService {
 
     Operation getOperation(long id) {
         return operationRepository.findById(id)
-                .orElseThrow(() -> new OperationNotFoundException("Operation with id: " + id + " - not found"));
+                .orElseThrow(() -> new ModelNotFoundException("Operation with id: " + id + " - not found"));
     }
 }

@@ -9,7 +9,7 @@ import org.kursovoi.server.dto.CreateCardDto;
 import org.kursovoi.server.model.Card;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.CardRepository;
-import org.kursovoi.server.util.exception.CardNotFoundException;
+import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.CardMapper;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +65,7 @@ public class CardService {
     @Transactional
     Card getSpecificCard(long idCard) {
         return cardRepository.findById(idCard)
-                .orElseThrow(() -> new CardNotFoundException("Card with id: " + idCard + " - not found!"));
+                .orElseThrow(() -> new ModelNotFoundException("Card with id: " + idCard + " - not found!"));
     }
 
 
