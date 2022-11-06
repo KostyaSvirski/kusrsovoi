@@ -19,10 +19,10 @@ public class DepositOrder {
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "client_id")
     private User user;
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_deposit")
+    @JoinColumn(name = "deposit_id")
     private Deposit deposit;
 }

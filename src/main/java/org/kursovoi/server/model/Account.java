@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "accounts")
+@Table(name = "account")
 public class Account {
 
     @Id
@@ -24,7 +24,7 @@ public class Account {
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "client_id")
     private User holder;
 
     @EqualsAndHashCode.Exclude

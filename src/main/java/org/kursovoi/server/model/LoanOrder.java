@@ -21,10 +21,10 @@ public class LoanOrder {
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "client_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "id_loan")
+    @JoinColumn(name = "loan_id")
     private Loan loan;
 }

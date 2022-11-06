@@ -19,6 +19,6 @@ public class Operation {
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "client_id")
     private User user;
 }

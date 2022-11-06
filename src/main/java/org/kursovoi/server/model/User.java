@@ -27,7 +27,7 @@ public class User {
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_role")
+    @JoinColumn(name = "user_role_id")
     private Role role;
 
     @EqualsAndHashCode.Exclude

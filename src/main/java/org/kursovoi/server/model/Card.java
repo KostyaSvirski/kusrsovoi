@@ -27,6 +27,6 @@ public class Card {
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_account")
+    @JoinColumn(name = "account_id")
     private Account account;
 }
