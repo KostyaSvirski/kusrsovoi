@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.DepositOrderStatus;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -16,6 +17,8 @@ public class DepositOrder {
     private long id;
     private DepositOrderStatus status;
     private long sum;
+    private LocalDate dateOfIssue;
+    private LocalDate dateOfExpire;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AuthRequestDto;
 import org.kursovoi.server.dto.CreateUserDto;
-import org.kursovoi.server.dto.UpdateStatusUserDto;
+import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.dto.UserDto;
 import org.kursovoi.server.model.Role;
 import org.kursovoi.server.model.User;
@@ -55,11 +55,11 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserStatus(UpdateStatusUserDto newStatus) {
+    public void updateUserStatus(UpdateStatusDto newStatus) {
         if (Arrays.stream(Status.values()).map(Enum::name).noneMatch(status -> status.equals(newStatus.getNewStatus()))) {
             throw new IncorrectStatusException("Status is incorrect");
         }
-        var user = getUser(newStatus.getUserId());
+        var user = getUser(newStatus.getId());
         user.setStatus(Status.valueOf(newStatus.getNewStatus()));
         userRepository.save(user);
     }

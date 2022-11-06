@@ -1,15 +1,17 @@
 package org.kursovoi.server.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.kursovoi.server.model.constant.LoanOrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
+@Builder
 @Entity
 @Table(name = "loan_order")
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoanOrder {
 
     @Id
@@ -18,6 +20,7 @@ public class LoanOrder {
     private LocalDate dateOfIssue;
     private long sum;
     private LoanOrderStatus status;
+    private LocalDate dateOfEnd;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne

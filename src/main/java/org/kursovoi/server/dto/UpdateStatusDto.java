@@ -3,9 +3,9 @@ package org.kursovoi.server.dto;
 import lombok.Data;
 
 @Data
-public class UpdateStatusUserDto {
+public class UpdateStatusDto {
 
     private String newStatus;
-    private long userId;
+    private long id;
 
 }

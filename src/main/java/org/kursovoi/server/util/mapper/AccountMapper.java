@@ -15,10 +15,10 @@ import java.time.ZoneId;
 @Component
 public interface AccountMapper {
 
-    @Mapping(target = "dateOfIssue", source = "account.dateOfIssue", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "dateOfIssue", source = "dateOfIssue", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "currency", qualifiedByName = "getCurrencyToString")
     @Mapping(target = "status", qualifiedByName = "getStatusToString")
-    @Mapping(target = "holderId", source = "account.holder.id")
+    @Mapping(target = "holderId", source = "holder.id")
     AccountDto map(Account account);
 
     @Mapping(target = "dateOfIssue", qualifiedByName = "getDateOfIssue")

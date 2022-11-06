@@ -15,7 +15,7 @@ public interface OperationMapper {
     @Mapping(target = "type", qualifiedByName = "getTypeToString")
     OperationDto map(Operation model);
 
-    @Mapping(target ="type", qualifiedByName = "getTypeToEnum")
+    @Mapping(target = "type", qualifiedByName = "getTypeToEnum")
     Operation map(OperationDto dto);
 
     @Named("getTypeToString")

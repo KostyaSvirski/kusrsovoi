@@ -17,7 +17,7 @@ import java.time.ZoneId;
 @Component
 public interface CardMapper {
 
-    @Mapping(target = "dateOfExpire", source = "card.dateOfExpire", dateFormat = "MM/yyyy")
+    @Mapping(target = "dateOfExpire", source = "dateOfExpire", dateFormat = "MM/yyyy")
     @Mapping(target = "status", qualifiedByName = "getStatusToString")
     @Mapping(target = "cardIssuer", qualifiedByName = "getCardIssuerToString")
     @Mapping(target = "type", qualifiedByName = "getTypeToString")

@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public interface UserMapper {
 
-    @Mapping(target = "dateOfBirth", source = "user.dateOfBirth", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "dateOfBirth", source = "dateOfBirth", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "role", qualifiedByName = "getRole")
     UserDto map(User user);
 
