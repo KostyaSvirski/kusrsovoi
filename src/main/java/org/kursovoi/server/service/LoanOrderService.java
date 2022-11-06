@@ -5,10 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.CreateLoanOrderDto;
 import org.kursovoi.server.dto.LoanOrderDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
+import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.model.LoanOrder;
 import org.kursovoi.server.model.constant.LoanOrderStatus;
+import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.LoanOrderRepository;
+import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
+import org.kursovoi.server.util.exception.TransactionSumTooBigException;
 import org.kursovoi.server.util.mapper.LoanOrderMapper;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +62,20 @@ public class LoanOrderService {
                 .build();
         newLoanOrder.setDateOfEnd(newLoanOrder.getDateOfIssue().plusMonths(loan.getMonthsToReturn()));
         loanOrderRepository.save(newLoanOrder);
+    }
+
+    @Transactional
+    public void updateSum(UpdateSumDto dto) {
+        var loanOrder = findLoanOrder(dto.getIdEntity());
+        if (!loanOrder.getStatus().equals(LoanOrderStatus.APPROVED) ||
+                !loanOrder.getUser().getStatus().equals(Status.ACTIVE)) {
+            throw new IncorrectStatusException("Forbidden due to status of user or order of deposit");
+        }
+        if (loanOrder.getSum() < dto.getSum()) {
+            throw new TransactionSumTooBigException("Balance of loan: " + loanOrder.getSum() + " - is less than transaction");
+        }
+        loanOrder.setSum(loanOrder.getSum() - dto.getSum());
+        loanOrderRepository.save(loanOrder);
     }
 
     LoanOrder findLoanOrder(long id) {

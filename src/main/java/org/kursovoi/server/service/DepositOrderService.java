@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.CreateDepositDto;
 import org.kursovoi.server.dto.DepositOrderDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
+import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.model.DepositOrder;
 import org.kursovoi.server.model.constant.DepositOrderStatus;
+import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.DepositOrderRepository;
+import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.DepositOrderMapper;
 import org.springframework.stereotype.Service;
@@ -57,6 +60,17 @@ public class DepositOrderService {
                 .status(DepositOrderStatus.PENDING)
                 .build();
         depositOrder.setDateOfEnd(depositOrder.getDateOfIssue().plusMonths(deposit.getMonthToExpire()));
+        depositOrderRepository.save(depositOrder);
+    }
+
+    @Transactional
+    public void updateSum(UpdateSumDto dto) {
+        var depositOrder = getDepositOrder(dto.getIdEntity());
+        if (!depositOrder.getStatus().equals(DepositOrderStatus.APPROVED) ||
+                !depositOrder.getUser().getStatus().equals(Status.ACTIVE)) {
+            throw new IncorrectStatusException("Forbidden due to status of user or order of deposit");
+        }
+        depositOrder.setSum(depositOrder.getSum() + dto.getSum());
         depositOrderRepository.save(depositOrder);
     }
 

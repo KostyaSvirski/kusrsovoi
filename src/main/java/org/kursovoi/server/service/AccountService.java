@@ -10,7 +10,7 @@ import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumToBigException;
+import org.kursovoi.server.util.exception.TransactionSumTooBigException;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +60,7 @@ public class AccountService {
             throw new AccountInvalidException("One of accounts is not active");
         }
         if (accountFrom.getSum() < transaction.getSum()) {
-            throw new TransactionSumToBigException("Transaction sum too big");
+            throw new TransactionSumTooBigException("Transaction sum too big");
         }
 
         accountFrom.setSum(accountFrom.getSum() - transaction.getSum());
