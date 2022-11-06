@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public enum DepositOrderStatus {
 
-    APPROVED, DECLINED, EXPIRED, CLOSED
+    APPROVED, DECLINED, EXPIRED, CLOSED, PENDING
 }

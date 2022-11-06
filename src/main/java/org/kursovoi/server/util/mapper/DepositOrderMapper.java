@@ -1,25 +1,25 @@
 package org.kursovoi.server.util.mapper;
 
-import org.kursovoi.server.dto.LoanOrderDto;
-import org.kursovoi.server.model.LoanOrder;
+import org.kursovoi.server.dto.DepositOrderDto;
+import org.kursovoi.server.model.DepositOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-@Mapper
 @Component
-public interface LoanOrderMapper {
+@Mapper
+public interface DepositOrderMapper {
 
     @Mapping(target = "dateOfIssue", source = "dateOfIssue", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "status", qualifiedByName = "getStatusToString")
-    @Mapping(target = "idLoan", source = "loan.id")
+    @Mapping(target = "idDeposit", source = "deposit.id")
     @Mapping(target = "idUser", source = "user.id")
     @Mapping(target = "dateOfEnd", source = "dateOfEnd", dateFormat = "yyyy-MM-dd")
-    LoanOrderDto map(LoanOrder model);
+    DepositOrderDto map(DepositOrder model);
 
     @Named("getStatusToString")
-    default String getStatusToString(LoanOrder model) {
+    default String getStatusToString(DepositOrder model) {
         return model.getStatus().name();
     }
 }

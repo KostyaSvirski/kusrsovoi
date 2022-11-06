@@ -7,13 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoanOrderDto {
+public class CreateDepositDto {
 
-    private long id;
-    private String dateOfIssue;
-    private String dateOfEnd;
-    private long sum;
-    private String status;
-    private long idLoan;
     private long idUser;
+    private long idDeposit;
+    private long sum;
 }
