@@ -1,4 +1,4 @@
-package org.kursovoi.server.util.interceptor;
+package org.kursovoi.server.util.json;
 
 import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ public interface RequestDeserializer<R> extends Function<String, R> {
     default R apply(String t) {
         Gson gson = new Gson();
         return gson.fromJson(t, (Class<R>)
-                ((ParameterizedType)getClass().getGenericSuperclass())
+                ((ParameterizedType) getClass().getGenericSuperclass())
                         .getActualTypeArguments()[1]);
     }
 }
