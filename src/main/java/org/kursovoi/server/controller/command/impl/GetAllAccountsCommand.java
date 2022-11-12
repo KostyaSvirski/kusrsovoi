@@ -4,23 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.service.AccountService;
-import org.kursovoi.server.util.json.DtoSerializer;
-import org.kursovoi.server.util.json.ListSerializer;
+import org.kursovoi.server.util.json.ResponseSerializer;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class GetAllAccountsCommand implements Command {
 
-    private final DtoSerializer<AccountDto> dtoSerializer;
-    private final ListSerializer listSerializer;
+    private final ResponseSerializer<List<AccountDto>> responseSerializer;
     private final AccountService service;
 
     @Override
     public String execute(String request) {
-        var response = service.getAllAccounts();
-        return listSerializer.apply(response.stream().map(dtoSerializer).collect(Collectors.toList()));
+        return responseSerializer.apply(service.getAllAccounts());
     }
 }

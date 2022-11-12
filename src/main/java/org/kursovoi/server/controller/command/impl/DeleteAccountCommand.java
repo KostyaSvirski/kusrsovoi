@@ -3,8 +3,8 @@ package org.kursovoi.server.controller.command.impl;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
 import org.kursovoi.server.service.AccountService;
-import org.kursovoi.server.util.json.DtoSerializer;
 import org.kursovoi.server.util.json.RequestDeserializer;
+import org.kursovoi.server.util.json.ResponseSerializer;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +13,7 @@ public class DeleteAccountCommand implements Command {
 
     private final AccountService service;
     private final RequestDeserializer<Long> deserializer;
-    private final DtoSerializer<String> serializer;
+    private final ResponseSerializer<String> serializer;
 
     @Override
     public String execute(String request) {
