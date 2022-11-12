@@ -2,11 +2,14 @@ package org.kursovoi.server.controller.command.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
+import org.kursovoi.server.controller.command.CommandHolder;
+import org.kursovoi.server.controller.command.CommandType;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.service.AccountService;
 import org.kursovoi.server.util.json.ResponseSerializer;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
@@ -19,5 +22,10 @@ public class GetAllAccountsCommand implements Command {
     @Override
     public String execute(String request) {
         return responseSerializer.apply(service.getAllAccounts());
+    }
+
+    @PostConstruct
+    private void postConstruct() {
+        CommandHolder.getInstance().addCommand(CommandType.GET_ALL_ACCOUNTS, this);
     }
 }
