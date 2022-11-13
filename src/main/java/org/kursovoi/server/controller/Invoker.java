@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
 import org.kursovoi.server.controller.command.CommandHolder;
 import org.kursovoi.server.controller.command.CommandType;
-import org.kursovoi.server.util.exception.UnknownCommandException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,13 +18,7 @@ public class Invoker {
         var parsedRequest = request.split(",", 2);
         String askedCommand = parsedRequest[0];
         String requestBody = parsedRequest.length == 2 ? parsedRequest[1] : null;
-        Command command;
-        try {
-            command = requestDispatcher.matchCommand(askedCommand);
-        } catch (UnknownCommandException ex) {
-            command = holder.getCommands().get(CommandType.INCORRECT_ACTION);
-            requestBody = ex.getMessage();
-        }
+        Command command = requestDispatcher.matchCommand(askedCommand);
         String response;
         try {
             response = command.execute(requestBody);
