@@ -7,6 +7,7 @@ import org.kursovoi.server.dto.DepositOrderDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.model.DepositOrder;
+import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.DepositOrderStatus;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.DepositOrderRepository;
@@ -37,8 +38,9 @@ public class DepositOrderService {
     }
 
     @Transactional
-    public DepositOrderDto findDepositOrder(long id) {
-        return mapper.map(getDepositOrder(id));
+    public List<DepositOrderDto> findDepositOrdersOfUser(long id) {
+        User user = userService.getUser(id);
+        return depositOrderRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
@@ -47,6 +49,12 @@ public class DepositOrderService {
         depositOrder.setStatus(DepositOrderStatus.valueOf(dto.getNewStatus()));
         depositOrderRepository.save(depositOrder);
     }
+
+    @Transactional
+    public DepositOrderDto findDepositOrder(long id) {
+        return mapper.map(getDepositOrder(id));
+    }
+
 
     @Transactional
     public void createDepositOrder(CreateDepositDto dto) {
