@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class DepositOrderService {
 
     private final DepositOrderRepository depositOrderRepository;
-    private final DepositeService depositeService;
+    private final DepositService depositService;
     private final UserService userService;
     private final DepositOrderMapper mapper;
 
@@ -51,7 +51,7 @@ public class DepositOrderService {
     @Transactional
     public void createDepositOrder(CreateDepositDto dto) {
         var user = userService.getUser(dto.getIdUser());
-        var deposit = depositeService.findSpecificDeposit(dto.getIdDeposit());
+        var deposit = depositService.findSpecificDeposit(dto.getIdDeposit());
         var depositOrder = DepositOrder.builder()
                 .deposit(deposit)
                 .user(user)
