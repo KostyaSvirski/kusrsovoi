@@ -12,4 +12,8 @@ public interface CurrencyCourseRepository extends JpaRepository<CurrencyCourse, 
 
     List<CurrencyCourse> findByDateBetween(LocalDate dateStart, LocalDate dateEnd);
 
+    CurrencyCourse findByDate(LocalDate date);
+
+
+
 }
