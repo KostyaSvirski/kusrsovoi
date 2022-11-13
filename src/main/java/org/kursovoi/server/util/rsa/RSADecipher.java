@@ -11,11 +11,11 @@ import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
-public class RSADecryptor {
+public class RSADecipher {
 
     private final Cipher decryptCipher;
 
-    public String decode(String encodedMessage) throws IllegalBlockSizeException, BadPaddingException {
+    public String decipher(String encodedMessage) throws IllegalBlockSizeException, BadPaddingException {
         byte[] decryptedMessageBytes = decryptCipher.doFinal(Base64.getDecoder().decode(encodedMessage));
         return new String(decryptedMessageBytes, StandardCharsets.UTF_8);
     }
