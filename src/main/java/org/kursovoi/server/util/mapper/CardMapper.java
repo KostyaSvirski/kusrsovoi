@@ -5,6 +5,7 @@ import org.kursovoi.server.dto.CreateCardDto;
 import org.kursovoi.server.model.Card;
 import org.kursovoi.server.model.constant.CardIssuer;
 import org.kursovoi.server.model.constant.CardType;
+import org.kursovoi.server.model.constant.Status;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -13,48 +14,48 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Component
-public interface CardMapper {
+public abstract class CardMapper {
 
     @Mapping(target = "dateOfExpire", source = "dateOfExpire", dateFormat = "MM/yyyy")
-    @Mapping(target = "status", qualifiedByName = "getStatusToString")
-    @Mapping(target = "cardIssuer", qualifiedByName = "getCardIssuerToString")
-    @Mapping(target = "type", qualifiedByName = "getTypeToString")
-    CardDto map(Card card);
+    @Mapping(target = "status", source = "status", qualifiedByName = "getStatusToString")
+    @Mapping(target = "cardIssuer", source = "cardIssuer", qualifiedByName = "getCardIssuerToString")
+    @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToString")
+    public abstract CardDto map(Card card);
 
-    @Mapping(target = "dateOfExpire", qualifiedByName = "getDateOfExpire")
-    @Mapping(target = "cardIssuer", qualifiedByName = "getCardIssuerToEnum")
-    @Mapping(target = "type", qualifiedByName = "getTypeToEnum")
-    Card map(CreateCardDto card);
+    @Mapping(target = "dateOfExpire", source = "idAccount", qualifiedByName = "getDateOfExpire")
+    @Mapping(target = "cardIssuer", source = "cardIssuer",qualifiedByName = "getCardIssuerToEnum")
+    @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToEnum")
+    public abstract Card map(CreateCardDto card);
 
     @Named("getStatusToString")
-    default String getStatusToString(Card card) {
-        return card.getStatus().name();
+    public String getStatusToString(Status status) {
+        return status.name();
     }
 
     @Named("getCardIssuerToString")
-    default String getCardIssuerToString(Card card) {
-        return card.getCardIssuer().name();
+    public String getCardIssuerToString(CardIssuer issuer) {
+        return issuer.name();
     }
 
     @Named("getTypeToString")
-    default String getTypeToString(Card card) {
-        return card.getType().name();
+    public String getTypeToString(CardType type) {
+        return type.name();
     }
 
     @Named("getDateOfExpire")
-    default LocalDate getDateOfExpire() {
+    public LocalDate getDateOfExpire(long idAccount) {
         return LocalDate.now(ZoneId.of("UTC+3")).plusYears(4);
     }
 
     @Named("getTypeToEnum")
-    default CardType getTypeToEnum(CreateCardDto dto) {
-        return CardType.valueOf(dto.getType());
+    public CardType getTypeToEnum(String dto) {
+        return CardType.valueOf(dto);
     }
 
     @Named("getCardIssuerToEnum")
-    default CardIssuer getCardIssuerToEnum(CreateCardDto dto) {
-        return CardIssuer.valueOf(dto.getCardIssuer());
+    public CardIssuer getCardIssuerToEnum(String dto) {
+        return CardIssuer.valueOf(dto);
     }
 }

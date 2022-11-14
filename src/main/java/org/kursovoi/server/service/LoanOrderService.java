@@ -7,6 +7,7 @@ import org.kursovoi.server.dto.LoanOrderDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.model.LoanOrder;
+import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.LoanOrderStatus;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.LoanOrderRepository;
@@ -35,6 +36,12 @@ public class LoanOrderService {
     @Transactional
     public List<LoanOrderDto> findAllLoans() {
         return loanOrderRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<LoanOrderDto> findLoansOrdersOfUser(long id) {
+        User user = userService.getUser(id);
+        return loanOrderRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional

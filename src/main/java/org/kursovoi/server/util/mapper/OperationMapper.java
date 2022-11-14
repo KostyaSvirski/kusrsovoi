@@ -9,22 +9,22 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper
-public interface OperationMapper {
+@Mapper(componentModel = "spring")
+public abstract class OperationMapper {
 
-    @Mapping(target = "type", qualifiedByName = "getTypeToString")
-    OperationDto map(Operation model);
+    @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToString")
+    public abstract OperationDto map(Operation model);
 
-    @Mapping(target = "type", qualifiedByName = "getTypeToEnum")
-    Operation map(OperationDto dto);
+    @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToEnum")
+    public abstract Operation map(OperationDto dto);
 
     @Named("getTypeToString")
-    default String getTypeToString(Operation model) {
-        return model.getType().name();
+    public String getTypeToString(OperationType model) {
+        return model.name();
     }
 
     @Named("getTypeToEnum")
-    default OperationType getTypeToEnum(OperationDto dto) {
-        return OperationType.valueOf(dto.getType());
+    public OperationType getTypeToEnum(String dto) {
+        return OperationType.valueOf(dto);
     }
 }
