@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public interface ResponseSerializer<T> extends Function<T, String> {
+public class ResponseSerializer<T> implements Function<T, String> {
 
     @Override
-    default String apply(T t){
+    public String apply(T t){
         Gson gson = new Gson();
         return gson.toJson(t);
     }

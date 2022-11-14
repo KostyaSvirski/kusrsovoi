@@ -7,10 +7,10 @@ import java.lang.reflect.ParameterizedType;
 import java.util.function.Function;
 
 @Component
-public interface RequestDeserializer<R> extends Function<String, R> {
+public class RequestDeserializer<R> implements Function<String, R> {
 
     @Override
-    default R apply(String t) {
+    public R apply(String t) {
         Gson gson = new Gson();
         return gson.fromJson(t, (Class<R>)
                 ((ParameterizedType) getClass().getGenericSuperclass())

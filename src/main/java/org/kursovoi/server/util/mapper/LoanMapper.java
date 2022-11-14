@@ -8,23 +8,23 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Component
-public interface LoanMapper {
-
-    @Mapping(target = "currency", qualifiedByName = "getCurrencyToString")
-    LoanDto map(Loan loan);
-
-    @Mapping(target = "currency", qualifiedByName = "getCurrencyToEnum")
-    Loan map(LoanDto loan);
+public abstract class LoanMapper {
 
     @Named("getCurrencyToString")
-    default String getCurrencyToString(Loan loan) {
-        return loan.getCurrency().name();
+    public String getCurrencyToString(Currency currency) {
+        return currency.name();
     }
 
     @Named("getCurrencyToEnum")
-    default Currency getCurrencyToEnum(LoanDto loan) {
-        return Currency.valueOf(loan.getCurrency());
+    public Currency getCurrencyToEnum(String currency) {
+        return Currency.valueOf(currency);
     }
+
+    @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToString")
+    public abstract LoanDto map(Loan loan);
+
+    @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToEnum")
+    public abstract Loan map(LoanDto loan);
 }

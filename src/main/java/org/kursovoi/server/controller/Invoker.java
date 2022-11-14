@@ -6,6 +6,9 @@ import org.kursovoi.server.controller.command.CommandHolder;
 import org.kursovoi.server.controller.command.CommandType;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+
 @Component
 @RequiredArgsConstructor
 public class Invoker {
@@ -23,7 +26,11 @@ public class Invoker {
         try {
             response = command.execute(requestBody);
         } catch (Throwable ex) {
-            response = holder.getCommands().get(CommandType.INCORRECT_ACTION).execute(ex.getMessage());
+            try {
+                response = holder.getCommands().get(CommandType.INCORRECT_ACTION).execute(ex.getMessage());
+            } catch (IllegalBlockSizeException | BadPaddingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return response;
     }
