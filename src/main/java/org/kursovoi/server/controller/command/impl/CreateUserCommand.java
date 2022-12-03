@@ -22,7 +22,7 @@ public class CreateUserCommand implements Command {
 
     @Override
     public String execute(String request) {
-        CreateUserDto dto = deserializer.apply(request);
+        CreateUserDto dto = deserializer.apply(request, CreateUserDto.class);
         service.createUser(dto);
         return serializer.apply("User created");
     }

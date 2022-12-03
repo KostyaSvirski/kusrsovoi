@@ -22,7 +22,7 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idUser = deserializer.apply(request);
+        long idUser = deserializer.apply(request, Long.class);
         service.deleteUser(idUser);
         return serializer.apply("User deleted");
     }

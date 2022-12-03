@@ -22,7 +22,7 @@ public class CreateCardCommand implements Command {
 
     @Override
     public String execute(String request) {
-        CreateCardDto dto = deserializer.apply(request);
+        CreateCardDto dto = deserializer.apply(request, CreateCardDto.class);
         service.createCard(dto);
         return serializer.apply("Card created");
     }

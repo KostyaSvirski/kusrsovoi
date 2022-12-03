@@ -10,7 +10,7 @@ import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumTooBigException;
+import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +29,14 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> getAllAccounts() {
-        return accountRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+        return accountRepository.findAll().stream().map(account -> mapper.map(account)).collect(Collectors.toList());
     }
 
     @Transactional
     public List<AccountDto> getAccountsOfUser(long id) {
         User user = userService.getUser(id);
-        return accountRepository.findByHolder(user).stream().map(mapper::map).collect(Collectors.toList());
+        return accountRepository.findByHolder(user).stream().map(account -> mapper.map(account))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -60,7 +61,7 @@ public class AccountService {
             throw new AccountInvalidException("One of accounts is not active");
         }
         if (accountFrom.getSum() < transaction.getSum()) {
-            throw new TransactionSumTooBigException("Transaction sum too big");
+            throw new TransactionSumTooLargeException("Transaction sum too large");
         }
 
         accountFrom.setSum(accountFrom.getSum() - transaction.getSum());

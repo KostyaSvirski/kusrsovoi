@@ -24,7 +24,7 @@ public class GetSpecificLoanCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idLoan = deserializer.apply(request);
+        long idLoan = deserializer.apply(request, Long.class);
         return serializer.apply(service.findSpecificLoanDto(idLoan));
     }
 

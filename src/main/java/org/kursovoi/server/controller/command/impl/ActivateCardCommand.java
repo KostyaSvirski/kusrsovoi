@@ -22,7 +22,7 @@ public class ActivateCardCommand implements Command {
 
     @Override
     public String execute(String request) {
-        ActivateCardDto dto = deserializer.apply(request);
+        ActivateCardDto dto = deserializer.apply(request, ActivateCardDto.class);
         service.activateCard(dto);
         return serializer.apply("card activated");
     }

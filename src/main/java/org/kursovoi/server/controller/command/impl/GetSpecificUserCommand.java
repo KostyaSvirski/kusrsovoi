@@ -23,7 +23,7 @@ public class GetSpecificUserCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idUser = deserializer.apply(request);
+        long idUser = deserializer.apply(request, Long.class);
         return serializer.apply(service.findUserDto(idUser));
     }
 

@@ -23,7 +23,7 @@ public class GetSpecificLoanOrderCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idLoanOrder = deserializer.apply(request);
+        long idLoanOrder = deserializer.apply(request, Long.class);
         return serializer.apply(service.findSpecificLoanOrder(idLoanOrder));
     }
 

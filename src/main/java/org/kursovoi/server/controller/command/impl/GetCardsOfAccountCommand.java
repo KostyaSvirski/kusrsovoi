@@ -23,7 +23,7 @@ public class GetCardsOfAccountCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idAccount = deserializer.apply(request);
+        long idAccount = deserializer.apply(request, Long.class);
         return serializer.apply(service.getCardsOfAccount(idAccount));
     }
 

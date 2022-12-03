@@ -22,7 +22,7 @@ public class DeleteDepositCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idDeposit = deserializer.apply(request);
+        long idDeposit = deserializer.apply(request, Long.class);
         service.deleteDeposit(idDeposit);
         return serializer.apply("Deposit deleted");
     }

@@ -21,6 +21,7 @@ public class Invoker {
         var parsedRequest = request.split(",", 2);
         String askedCommand = parsedRequest[0];
         String requestBody = parsedRequest.length == 2 ? parsedRequest[1] : null;
+        // AUTHENTICATE_USER, { "login": "aaa" , "password" : "aaa" }
         Command command = requestDispatcher.matchCommand(askedCommand);
         String response;
         try {

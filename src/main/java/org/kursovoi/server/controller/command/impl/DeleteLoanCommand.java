@@ -22,7 +22,7 @@ public class DeleteLoanCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idLoan = deserializer.apply(request);
+        long idLoan = deserializer.apply(request, Long.class);
         service.deleteLoan(idLoan);
         return serializer.apply("Loan deleted");
     }

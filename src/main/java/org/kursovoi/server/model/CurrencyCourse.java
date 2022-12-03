@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Table(name = "currency_course")
 @Entity
 @Data
-@NoArgsConstructor
 public class CurrencyCourse {
 
     @Id

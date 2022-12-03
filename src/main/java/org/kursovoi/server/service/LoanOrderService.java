@@ -13,7 +13,7 @@ import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.LoanOrderRepository;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumTooBigException;
+import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
 import org.kursovoi.server.util.mapper.LoanOrderMapper;
 import org.springframework.stereotype.Service;
 
@@ -79,7 +79,7 @@ public class LoanOrderService {
             throw new IncorrectStatusException("Forbidden due to status of user or order of deposit");
         }
         if (loanOrder.getSum() < dto.getSum()) {
-            throw new TransactionSumTooBigException("Balance of loan: " + loanOrder.getSum() + " - is less than transaction");
+            throw new TransactionSumTooLargeException("Balance of loan: " + loanOrder.getSum() + " - is less than transaction");
         }
         loanOrder.setSum(loanOrder.getSum() - dto.getSum());
         loanOrderRepository.save(loanOrder);

@@ -22,7 +22,7 @@ public class GetSpecificCardCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idCard = deserializer.apply(request);
+        long idCard = deserializer.apply(request, Long.class);
         return serializer.apply(service.getSpecificCardDto(idCard));
     }
 

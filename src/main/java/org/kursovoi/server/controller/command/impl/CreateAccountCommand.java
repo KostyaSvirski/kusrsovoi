@@ -21,7 +21,7 @@ public class CreateAccountCommand implements Command {
 
     @Override
     public String execute(String request) {
-        var newAccount = deserializer.apply(request);
+        var newAccount = deserializer.apply(request, AccountDto.class);
         service.createAccount(newAccount);
         return serializer.apply("created");
     }

@@ -22,7 +22,7 @@ public class GetSpecificDepositCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idDeposit = deserializer.apply(request);
+        long idDeposit = deserializer.apply(request, Long.class);
         return serializer.apply(service.findSpecificDepositDto(idDeposit));
     }
 

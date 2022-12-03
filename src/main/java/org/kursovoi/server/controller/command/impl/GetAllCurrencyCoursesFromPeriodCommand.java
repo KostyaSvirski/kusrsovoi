@@ -24,7 +24,7 @@ public class GetAllCurrencyCoursesFromPeriodCommand implements Command {
 
     @Override
     public String execute(String request) {
-        PeriodOfCurrencyCoursesDto dto = deserializer.apply(request);
+        PeriodOfCurrencyCoursesDto dto = deserializer.apply(request, PeriodOfCurrencyCoursesDto.class);
         return serializer.apply(service.getAllCurrencyCoursesFromPeriod(dto));
     }
 

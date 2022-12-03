@@ -23,7 +23,7 @@ public class CreateDepositCommand implements Command {
 
     @Override
     public String execute(String request) {
-        DepositDto dto = deserializer.apply(request);
+        DepositDto dto = deserializer.apply(request, DepositDto.class);
         service.createDeposit(dto);
         return serializer.apply("Deposit created");
     }

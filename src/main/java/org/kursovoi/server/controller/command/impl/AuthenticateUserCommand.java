@@ -1,5 +1,6 @@
 package org.kursovoi.server.controller.command.impl;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
 import org.kursovoi.server.controller.command.CommandHolder;
@@ -12,6 +13,7 @@ import org.kursovoi.server.util.json.ResponseSerializer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.ParameterizedType;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class AuthenticateUserCommand implements Command {
 
     @Override
     public String execute(String request) {
-        AuthRequestDto dto = deserializer.apply(request);
+        AuthRequestDto dto = deserializer.apply(request, AuthRequestDto.class);
         return serializer.apply(service.authenticate(dto));
     }
 

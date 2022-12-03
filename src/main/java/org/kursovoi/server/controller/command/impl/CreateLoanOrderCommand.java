@@ -23,7 +23,7 @@ public class CreateLoanOrderCommand implements Command {
 
     @Override
     public String execute(String request) {
-        CreateLoanOrderDto dto = deserializer.apply(request);
+        CreateLoanOrderDto dto = deserializer.apply(request, CreateLoanOrderDto.class);
         service.createNewLoanOrder(dto);
         return serializer.apply("Loan order created");
     }

@@ -22,7 +22,7 @@ public class UpdateCurrencyCourseCommand implements Command {
 
     @Override
     public String execute(String request) {
-        UpdateCurrencyCourseDto dto = deserializer.apply(request);
+        UpdateCurrencyCourseDto dto = deserializer.apply(request, UpdateCurrencyCourseDto.class);
         service.updateCurrencyCourse(dto);
         return serializer.apply("Currency course updated");
     }

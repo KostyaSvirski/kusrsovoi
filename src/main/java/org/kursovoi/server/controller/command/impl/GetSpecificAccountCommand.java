@@ -22,7 +22,7 @@ public class GetSpecificAccountCommand implements Command {
 
     @Override
     public String execute(String request) {
-        var id = deserializer.apply(request);
+        var id = deserializer.apply(request, Long.class);
         return serializer.apply(service.getSpecificAccountDto(id));
     }
 

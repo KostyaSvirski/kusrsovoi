@@ -23,7 +23,7 @@ public class UpdateStatusLoanOrderCommand implements Command {
 
     @Override
     public String execute(String request) {
-        UpdateStatusDto dto = deserializer.apply(request);
+        UpdateStatusDto dto = deserializer.apply(request, UpdateStatusDto.class);
         service.updateStatus(dto);
         return serializer.apply("Status updated");
     }

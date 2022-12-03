@@ -22,7 +22,7 @@ public class GetSpecificOperationCommand implements Command {
 
     @Override
     public String execute(String request) {
-        long idOperation = deserializer.apply(request);
+        long idOperation = deserializer.apply(request, Long.class);
         return serializer.apply(service.getSpecificOperationDto(idOperation));
     }
 

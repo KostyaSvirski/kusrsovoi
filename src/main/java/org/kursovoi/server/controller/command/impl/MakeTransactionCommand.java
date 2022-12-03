@@ -26,7 +26,7 @@ public class MakeTransactionCommand implements Command {
 
     @Override
     public String execute(String request) throws IllegalBlockSizeException, BadPaddingException {
-        TransactionDto dto = deserializer.apply(decipher.decipher(request));
+        TransactionDto dto = deserializer.apply(decipher.decipher(request), TransactionDto.class);
         service.makeTransaction(dto);
         return serializer.apply("Transaction completed");
     }

@@ -23,7 +23,7 @@ public class GetAccountsOfUserCommand implements Command {
 
     @Override
     public String execute(String request) {
-        var id = deserializer.apply(request);
+        var id = deserializer.apply(request, Long.class);
         return responseSerializer.apply(service.getAccountsOfUser(id));
     }
 

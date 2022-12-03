@@ -22,7 +22,7 @@ public class UpdateStatusOfCardCommand implements Command {
 
     @Override
     public String execute(String request) {
-        ChangeStatusOfCardDto dto = deserializer.apply(request);
+        ChangeStatusOfCardDto dto = deserializer.apply(request, ChangeStatusOfCardDto.class);
         service.changeStatusOfCard(dto);
         return serializer.apply("Status of card changed");
     }

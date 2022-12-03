@@ -12,7 +12,7 @@ public class UserDto {
     private String surname;
     private String dateOfBirth;
     private String phoneNumber;
-    private Status status;
+    private String status;
     private String email;
     private String role;
 }

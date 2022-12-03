@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
 import org.kursovoi.server.controller.command.CommandHolder;
 import org.kursovoi.server.controller.command.CommandType;
-import org.kursovoi.server.dto.CreateLoanOrderDto;
 import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.service.LoanOrderService;
 import org.kursovoi.server.util.json.RequestDeserializer;
@@ -23,7 +22,7 @@ public class UpdateSumLoanOrderCommand implements Command {
 
     @Override
     public String execute(String request) {
-        UpdateSumDto dto = deserializer.apply(request);
+        UpdateSumDto dto = deserializer.apply(request, UpdateSumDto.class);
         service.updateSum(dto);
         return serializer.apply("Sum of loan order updated");
     }

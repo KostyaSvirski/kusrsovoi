@@ -21,7 +21,7 @@ public class DeleteAccountCommand implements Command {
 
     @Override
     public String execute(String request) {
-        var id = deserializer.apply(request);
+        var id = deserializer.apply(request, Long.class);
         service.deleteAccount(id);
         return serializer.apply("deleted");
     }
