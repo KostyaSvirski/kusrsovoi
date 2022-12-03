@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.security.InvalidKeyException;
@@ -24,8 +25,8 @@ public class EncryptionConfiguration {
     public PrivateKey privateKey() throws InvalidKeySpecException, IOException,
             NoSuchAlgorithmException, URISyntaxException {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        File privateKeyFile = new File(getClass().getClassLoader().getResource("private.key").toURI());
-        byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
+        InputStream inputStream = getClass().getResourceAsStream("/private.key");
+        byte[] privateKeyBytes = inputStream.readAllBytes();
         EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
         return keyFactory.generatePrivate(privateKeySpec);
     }

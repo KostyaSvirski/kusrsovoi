@@ -3,7 +3,7 @@ package org.kursovoi.server.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AccountDto;
-import org.kursovoi.server.dto.TransactionDto;
+import org.kursovoi.server.dto.CorrectTransactionDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
@@ -54,7 +54,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void makeTransaction(TransactionDto transaction) {
+    public void makeTransaction(CorrectTransactionDto transaction) {
         Account accountFrom = getSpecificAccount(transaction.getIdFrom());
         Account accountTo = getSpecificAccount(transaction.getIdTo());
         if (!accountFrom.getStatus().equals(Status.ACTIVE) || !accountTo.getStatus().equals(Status.ACTIVE)) {

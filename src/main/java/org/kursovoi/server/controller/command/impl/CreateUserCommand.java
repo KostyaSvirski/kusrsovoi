@@ -24,7 +24,7 @@ public class CreateUserCommand implements Command {
     public String execute(String request) {
         CreateUserDto dto = deserializer.apply(request, CreateUserDto.class);
         service.createUser(dto);
-        return serializer.apply("User created");
+        return serializer.apply("Пользователь создан");
     }
 
     @PostConstruct

@@ -23,7 +23,7 @@ public class CreateAccountCommand implements Command {
     public String execute(String request) {
         var newAccount = deserializer.apply(request, AccountDto.class);
         service.createAccount(newAccount);
-        return serializer.apply("created");
+        return serializer.apply("Cчет создан");
     }
 
     @PostConstruct

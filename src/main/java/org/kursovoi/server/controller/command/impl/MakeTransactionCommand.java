@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.controller.command.Command;
 import org.kursovoi.server.controller.command.CommandHolder;
 import org.kursovoi.server.controller.command.CommandType;
+import org.kursovoi.server.dto.CorrectTransactionDto;
 import org.kursovoi.server.dto.TransactionDto;
 import org.kursovoi.server.service.AccountService;
 import org.kursovoi.server.util.json.RequestDeserializer;
@@ -26,8 +27,12 @@ public class MakeTransactionCommand implements Command {
 
     @Override
     public String execute(String request) throws IllegalBlockSizeException, BadPaddingException {
-        TransactionDto dto = deserializer.apply(decipher.decipher(request), TransactionDto.class);
-        service.makeTransaction(dto);
+        TransactionDto dto = deserializer.apply(request, TransactionDto.class);
+        CorrectTransactionDto transactionDto = new CorrectTransactionDto();
+        transactionDto.setSum(Long.parseLong(decipher.decipher(dto.getSum())));
+        transactionDto.setIdFrom(Long.parseLong(decipher.decipher(dto.getIdFrom())));
+        transactionDto.setIdTo(Long.parseLong(decipher.decipher(dto.getIdTo())));
+        service.makeTransaction(transactionDto);
         return serializer.apply("Transaction completed");
     }
 

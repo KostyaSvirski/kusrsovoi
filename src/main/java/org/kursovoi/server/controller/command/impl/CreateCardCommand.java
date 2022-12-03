@@ -24,7 +24,7 @@ public class CreateCardCommand implements Command {
     public String execute(String request) {
         CreateCardDto dto = deserializer.apply(request, CreateCardDto.class);
         service.createCard(dto);
-        return serializer.apply("Card created");
+        return serializer.apply("Карточка создана");
     }
 
     @PostConstruct

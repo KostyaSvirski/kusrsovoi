@@ -25,7 +25,7 @@ public class CreateLoanOrderCommand implements Command {
     public String execute(String request) {
         CreateLoanOrderDto dto = deserializer.apply(request, CreateLoanOrderDto.class);
         service.createNewLoanOrder(dto);
-        return serializer.apply("Loan order created");
+        return serializer.apply("Вы успешно заказали кредит");
     }
 
     @PostConstruct

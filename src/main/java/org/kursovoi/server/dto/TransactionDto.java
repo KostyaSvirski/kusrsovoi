@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class TransactionDto {
 
-    private long idTo;
-    private long idFrom;
-    private long sum;
+    private String idTo;
+    private String idFrom;
+    private String sum;
 }

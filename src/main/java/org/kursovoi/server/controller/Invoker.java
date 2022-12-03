@@ -28,6 +28,7 @@ public class Invoker {
             response = command.execute(requestBody);
         } catch (Throwable ex) {
             try {
+                ex.printStackTrace();
                 response = holder.getCommands().get(CommandType.INCORRECT_ACTION).execute(ex.getMessage());
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 throw new RuntimeException(e);

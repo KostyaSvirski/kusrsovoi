@@ -16,6 +16,6 @@ public class Controller {
 
     @ServiceActivator(inputChannel = "inboundChannel")
     public byte[] process(byte[] message) {
-        return invoker.invoke(message).getBytes(StandardCharsets.UTF_8);
+        return invoker.invoke(message).getBytes();
     }
 }
