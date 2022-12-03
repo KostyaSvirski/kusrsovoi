@@ -6,7 +6,7 @@ public class ModelNotFoundException extends RuntimeException {
     }
 
     public ModelNotFoundException(String message) {
-        super(message);
+        super("ERROR " + message);
     }
 
     public ModelNotFoundException(String message, Throwable cause) {

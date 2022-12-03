@@ -50,7 +50,7 @@ public class UserService {
         }
         var user = mapper.map(userDto);
         user.setStatus(Status.ACTIVE);
-        user.setRole(new Role(1L, "user"));
+        user.setRole(new Role(2L, "user"));
         userRepository.save(user);
     }
 

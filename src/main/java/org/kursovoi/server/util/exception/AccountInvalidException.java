@@ -6,7 +6,7 @@ public class AccountInvalidException extends RuntimeException {
     }
 
     public AccountInvalidException(String message) {
-        super(message);
+        super("ERROR " + message);
     }
 
     public AccountInvalidException(String message, Throwable cause) {

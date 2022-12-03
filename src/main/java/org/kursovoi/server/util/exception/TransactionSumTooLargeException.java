@@ -6,7 +6,7 @@ public class TransactionSumTooLargeException extends RuntimeException {
     }
 
     public TransactionSumTooLargeException(String message) {
-        super(message);
+        super("ERROR " + message);
     }
 
     public TransactionSumTooLargeException(String message, Throwable cause) {

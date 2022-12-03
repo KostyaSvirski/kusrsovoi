@@ -6,7 +6,7 @@ public class IncorrectStatusException extends RuntimeException {
     }
 
     public IncorrectStatusException(String message) {
-        super(message);
+        super("ERROR " + message);
     }
 
     public IncorrectStatusException(String message, Throwable cause) {
