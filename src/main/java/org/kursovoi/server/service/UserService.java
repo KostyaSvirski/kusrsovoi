@@ -80,6 +80,18 @@ public class UserService {
     }
 
     @Transactional
+    public void updateUser(UserDto dto) {
+        User user = getUser(dto.getId());
+        user.setLogin(dto.getLogin());
+        user.setEmail(dto.getEmail());
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        userRepository.saveAndFlush(user);
+
+    }
+
+    @Transactional
     User getUser(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ModelNotFoundException("User with id: " + id + " - not found!"));
