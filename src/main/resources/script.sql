@@ -1,3 +1,6 @@
+
+delete from bank.currency_course where id = 5;
+
 -- -----------------------------------------------------
 -- Schema Bank
 -- -----------------------------------------------------
@@ -143,3 +146,22 @@ CREATE TABLE IF NOT EXISTS `Bank`.`currency_course` (
 	`cost_eur` DOUBLE NOT NULL,
 	`cost_rub` DOUBLE NOT NULL,
    CONSTRAINT `pk_currency_course` PRIMARY KEY (`id`));
+   
+drop table bank.currency_course;
+
+select * from bank.currency_course;
+
+insert into bank.deposit (interest, month_to_expire, currency) values (12.5, 3, 0);
+insert into bank.deposit (interest, month_to_expire, currency) values (4.5, 9, 1);
+
+insert into bank.loan (interest, months_to_return, currency) values (19, 36, 1);
+insert into bank.loan (interest, months_to_return, currency) values (15, 12, 0);
+
+select * from bank.currency_course;
+
+insert into bank.currency_course (date, cost_usd, cost_eur, cost_rub) values (STR_TO_DATE("04-12-22","%d-%m-%y"), 2.53, 2.62, 4.04);
+insert into bank.currency_course (date, cost_usd, cost_eur, cost_rub) values (STR_TO_DATE("03-12-22","%d-%m-%y"), 2.5, 2.6, 4);
+insert into bank.currency_course (date, cost_usd, cost_eur, cost_rub) values (STR_TO_DATE("02-12-22","%d-%m-%y"), 2.48, 2.57, 4.02);
+insert into bank.currency_course (date, cost_usd, cost_eur, cost_rub) values (STR_TO_DATE("01-12-22","%d-%m-%y"), 2.55, 2.58, 4.01);
+insert into bank.currency_course (date, cost_usd, cost_eur, cost_rub) values (STR_TO_DATE("30-11-22","%d-%m-%y"), 2.54, 2.59, 3.98);
+insert into bank.currency_course (date, cost_usd, cost_eur, cost_rub) values (STR_TO_DATE("29-11-22","%d-%m-%y"), 2.51, 2.47, 3.92);
