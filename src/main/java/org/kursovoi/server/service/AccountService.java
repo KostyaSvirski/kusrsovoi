@@ -4,17 +4,20 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.dto.CorrectTransactionDto;
+import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
+import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,16 @@ public class AccountService {
         User user = userService.getUser(dto.getHolderId());
         newAccount.setHolder(user);
         accountRepository.saveAndFlush(newAccount);
+    }
+
+    @Transactional
+    public void updateStatusOfAccount(UpdateStatusDto dto) {
+        if (Arrays.stream(Status.values()).map(Enum::name).noneMatch(status -> status.equals(dto.getNewStatus()))) {
+            throw new IncorrectStatusException("Status is incorrect");
+        }
+        var account = getSpecificAccount(dto.getId());
+        account.setStatus(Status.valueOf(dto.getNewStatus()));
+        accountRepository.save(account);
     }
 
     @Transactional

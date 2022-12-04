@@ -76,7 +76,11 @@ public class UserService {
         if (!user.getPassword().equals(request.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
-        return mapper.map(user);
+        if (user.getStatus().equals(Status.ACTIVE)) {
+            return mapper.map(user);
+        } else {
+            throw new IncorrectPasswordException("User is not active");
+        }
     }
 
     @Transactional

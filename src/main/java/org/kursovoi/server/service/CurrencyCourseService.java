@@ -35,7 +35,7 @@ public class CurrencyCourseService {
 
     @Transactional
     public CurrencyCourseDto getCurrencyCourseForToday() {
-        return mapper.map(repository.findByDate(LocalDate.now(ZoneId.of("UTC+3"))));
+        return mapper.map(repository.findFirstByDate(LocalDate.now(ZoneId.of("UTC+3"))));
     }
 
     @Transactional

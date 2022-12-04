@@ -44,6 +44,12 @@ public class DepositOrderService {
     }
 
     @Transactional
+    public List<DepositOrderDto> findAllPendingDeposits() {
+        return depositOrderRepository
+                .findByStatus(DepositOrderStatus.PENDING).stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
     public void updateStatus(UpdateStatusDto dto) {
         var depositOrder = getDepositOrder(dto.getId());
         depositOrder.setStatus(DepositOrderStatus.valueOf(dto.getNewStatus()));

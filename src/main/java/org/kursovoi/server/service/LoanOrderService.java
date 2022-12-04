@@ -45,6 +45,12 @@ public class LoanOrderService {
     }
 
     @Transactional
+    public List<LoanOrderDto> findAllPendingLoans() {
+        return loanOrderRepository
+                .findByStatus(LoanOrderStatus.PENDING).stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
     public LoanOrderDto findSpecificLoanOrder(long id) {
         return mapper.map(findLoanOrder(id));
     }
