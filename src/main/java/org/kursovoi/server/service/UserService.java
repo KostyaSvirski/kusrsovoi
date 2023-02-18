@@ -50,7 +50,7 @@ public class UserService {
         }
         var user = mapper.map(userDto);
         user.setStatus(Status.ACTIVE);
-        user.setRole(new Role(1L, "user"));
+        user.setRole(new Role(2L, "user"));
         userRepository.save(user);
     }
 
@@ -76,7 +76,23 @@ public class UserService {
         if (!user.getPassword().equals(request.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
-        return mapper.map(user);
+        if (user.getStatus().equals(Status.ACTIVE)) {
+            return mapper.map(user);
+        } else {
+            throw new IncorrectPasswordException("User is not active");
+        }
+    }
+
+    @Transactional
+    public void updateUser(UserDto dto) {
+        User user = getUser(dto.getId());
+        user.setLogin(dto.getLogin());
+        user.setEmail(dto.getEmail());
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        userRepository.saveAndFlush(user);
+
     }
 
     @Transactional

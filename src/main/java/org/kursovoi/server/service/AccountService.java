@@ -3,18 +3,21 @@ package org.kursovoi.server.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AccountDto;
-import org.kursovoi.server.dto.TransactionDto;
+import org.kursovoi.server.dto.CorrectTransactionDto;
+import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
+import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumTooBigException;
+import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,13 +32,14 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> getAllAccounts() {
-        return accountRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+        return accountRepository.findAll().stream().map(account -> mapper.map(account)).collect(Collectors.toList());
     }
 
     @Transactional
     public List<AccountDto> getAccountsOfUser(long id) {
         User user = userService.getUser(id);
-        return accountRepository.findByHolder(user).stream().map(mapper::map).collect(Collectors.toList());
+        return accountRepository.findByHolder(user).stream().map(account -> mapper.map(account))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -48,19 +52,29 @@ public class AccountService {
     }
 
     @Transactional
+    public void updateStatusOfAccount(UpdateStatusDto dto) {
+        if (Arrays.stream(Status.values()).map(Enum::name).noneMatch(status -> status.equals(dto.getNewStatus()))) {
+            throw new IncorrectStatusException("Status is incorrect");
+        }
+        var account = getSpecificAccount(dto.getId());
+        account.setStatus(Status.valueOf(dto.getNewStatus()));
+        accountRepository.save(account);
+    }
+
+    @Transactional
     public void deleteAccount(long idAccount) {
         accountRepository.delete(getSpecificAccount(idAccount));
     }
 
     @Transactional
-    public void makeTransaction(TransactionDto transaction) {
+    public void makeTransaction(CorrectTransactionDto transaction) {
         Account accountFrom = getSpecificAccount(transaction.getIdFrom());
         Account accountTo = getSpecificAccount(transaction.getIdTo());
         if (!accountFrom.getStatus().equals(Status.ACTIVE) || !accountTo.getStatus().equals(Status.ACTIVE)) {
             throw new AccountInvalidException("One of accounts is not active");
         }
         if (accountFrom.getSum() < transaction.getSum()) {
-            throw new TransactionSumTooBigException("Transaction sum too big");
+            throw new TransactionSumTooLargeException("Transaction sum too large");
         }
 
         accountFrom.setSum(accountFrom.getSum() - transaction.getSum());

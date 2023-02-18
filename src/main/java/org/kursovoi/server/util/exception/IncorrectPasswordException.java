@@ -6,7 +6,7 @@ public class IncorrectPasswordException extends RuntimeException {
     }
 
     public IncorrectPasswordException(String message) {
-        super(message);
+        super("ERROR " + message);
     }
 
     public IncorrectPasswordException(String message, Throwable cause) {

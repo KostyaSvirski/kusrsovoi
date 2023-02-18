@@ -19,11 +19,18 @@ import java.util.stream.Collectors;
 public class OperationService {
 
     private final OperationRepository operationRepository;
+    private final UserService userService;
     private final OperationMapper mapper;
 
     @Transactional
     public List<OperationDto> getAllOperations() {
         return operationRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<OperationDto> findAllOperationsOfUser(long id) {
+        var user = userService.getUser(id);
+        return operationRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
