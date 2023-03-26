@@ -9,11 +9,13 @@ import org.kursovoi.server.dto.CreateCardDto;
 import org.kursovoi.server.model.Card;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.CardRepository;
+import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.CardMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,9 @@ public class CardService {
 
     @Transactional
     public void changeStatusOfCard(ChangeStatusOfCardDto dto) {
+        if (Arrays.stream(Status.values()).map(Enum::name).noneMatch(status -> status.equals(dto.getNewStatus()))) {
+            throw new IncorrectStatusException("Status is incorrect");
+        }
         var card = getSpecificCard(dto.getCardId());
         card.setStatus(Status.valueOf(dto.getNewStatus()));
         cardRepository.save(card);

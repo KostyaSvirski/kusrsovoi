@@ -4,17 +4,21 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.dto.TransactionDto;
+import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.AccountInvalidException;
+import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumTooBigException;
+import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
 import org.kursovoi.server.util.mapper.AccountMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +28,7 @@ import java.util.stream.Collectors;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final UserService userService;
+    private UserService userService;
     private final AccountMapper mapper;
 
     @Transactional
@@ -33,8 +37,7 @@ public class AccountService {
     }
 
     @Transactional
-    public List<AccountDto> getAccountsOfUser(long id) {
-        User user = userService.getUser(id);
+    public List<AccountDto> getAccountsOfUser(User user) {
         return accountRepository.findByHolder(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
@@ -60,7 +63,7 @@ public class AccountService {
             throw new AccountInvalidException("One of accounts is not active");
         }
         if (accountFrom.getSum() < transaction.getSum()) {
-            throw new TransactionSumTooBigException("Transaction sum too big");
+            throw new TransactionSumTooLargeException("Transaction sum too big");
         }
 
         accountFrom.setSum(accountFrom.getSum() - transaction.getSum());
@@ -68,6 +71,16 @@ public class AccountService {
 
         accountRepository.save(accountTo);
         accountRepository.save(accountFrom);
+    }
+
+    @Transactional
+    public void updateStatusOfAccount(UpdateStatusDto dto) {
+        if (Arrays.stream(Status.values()).map(Enum::name).noneMatch(status -> status.equals(dto.getNewStatus()))) {
+            throw new IncorrectStatusException("Status is incorrect");
+        }
+        var account = getSpecificAccount(dto.getId());
+        account.setStatus(Status.valueOf(dto.getNewStatus()));
+        accountRepository.save(account);
     }
 
     @Transactional

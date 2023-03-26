@@ -3,6 +3,7 @@ package org.kursovoi.server.util.mapper;
 import org.kursovoi.server.dto.AccountDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.constant.Currency;
+import org.kursovoi.server.model.constant.Status;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -11,37 +12,37 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Component
-public interface AccountMapper {
+public abstract class AccountMapper {
 
     @Mapping(target = "dateOfIssue", source = "dateOfIssue", dateFormat = "yyyy-MM-dd")
-    @Mapping(target = "currency", qualifiedByName = "getCurrencyToString")
-    @Mapping(target = "status", qualifiedByName = "getStatusToString")
+    @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToString")
+    @Mapping(target = "status", source = "status", qualifiedByName = "getStatusToString")
     @Mapping(target = "holderId", source = "holder.id")
-    AccountDto map(Account account);
+    public abstract AccountDto map(Account account);
 
-    @Mapping(target = "dateOfIssue", qualifiedByName = "getDateOfIssue")
-    @Mapping(target = "currency", qualifiedByName = "getCurrencyToEnum")
-    Account map(AccountDto dto);
+    @Mapping(target = "dateOfIssue", source = "dateOfIssue", qualifiedByName = "getDateOfIssue")
+    @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToEnum")
+    public abstract Account map(AccountDto dto);
 
     @Named("getCurrencyToString")
-    default String getCurrencyToString(Account account) {
-        return account.getCurrency().name();
+    public String getCurrencyToString(Currency currency) {
+        return currency.name();
     }
 
     @Named("getStatusToString")
-    default String getStatusToString(Account account) {
-        return account.getStatus().name();
+    public String getStatusToString(Status status) {
+        return status.name();
     }
 
     @Named("getCurrencyToEnum")
-    default Currency getCurrencyToEnum(AccountDto account) {
-        return Currency.valueOf(account.getCurrency());
+    public Currency getCurrencyToEnum(String currency) {
+        return Currency.valueOf(currency);
     }
 
     @Named("getDateOfIssue")
-    default LocalDate getDateOfIssue(AccountDto account) {
+    public LocalDate getDateOfIssue(String dateOfIssue) {
         return LocalDate.now(ZoneId.of("UTC+3"));
     }
 }

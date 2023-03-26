@@ -2,10 +2,7 @@ package org.kursovoi.server.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.kursovoi.server.dto.AuthRequestDto;
-import org.kursovoi.server.dto.CreateUserDto;
-import org.kursovoi.server.dto.UpdateStatusDto;
-import org.kursovoi.server.dto.UserDto;
+import org.kursovoi.server.dto.*;
 import org.kursovoi.server.model.Role;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
@@ -15,20 +12,36 @@ import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.UserAlreadyExistsException;
 import org.kursovoi.server.util.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Data
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper mapper;
+    private final OperationService operationService;
+
+    private final LoanOrderService loanOrderService;
+
+    private final DepositOrderService depositOrderService;
+
+    private final AccountService accountService;
+
+    @PostConstruct
+    public void init() {
+        loanOrderService.setUserService(this);
+        depositOrderService.setUserService(this);
+        accountService.setUserService(this);
+    }
 
     @Transactional
     public List<UserDto> getAllUsers() {
@@ -38,6 +51,22 @@ public class UserService {
     @Transactional
     public UserDto findUserDto(long id) {
         return mapper.map(getUser(id));
+    }
+
+    public List<OperationDto> findAllOperationsOfUser(long id) {
+        return operationService.findAllOperationsOfUser(getUser(id));
+    }
+
+    public List<LoanOrderDto> findLoansOrdersOfUser(long id) {
+        return loanOrderService.findLoansOrdersOfUser(getUser(id));
+    }
+
+    public List<DepositOrderDto> findDepositOrdersOfUser(long id) {
+        return depositOrderService.findDepositOrdersOfUser(getUser(id));
+    }
+
+    public List<AccountDto> getAccountsOfUser(long id) {
+        return accountService.getAccountsOfUser(getUser(id));
     }
 
     @Transactional
@@ -50,7 +79,7 @@ public class UserService {
         }
         var user = mapper.map(userDto);
         user.setStatus(Status.ACTIVE);
-        user.setRole(new Role(1L, "user"));
+        user.setRole(new Role(2L, "user"));
         userRepository.save(user);
     }
 
@@ -76,7 +105,23 @@ public class UserService {
         if (!user.getPassword().equals(request.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
-        return mapper.map(user);
+        if (user.getStatus().equals(Status.ACTIVE)) {
+            return mapper.map(user);
+        } else {
+            throw new IncorrectPasswordException("User is not active");
+        }
+    }
+
+    @Transactional
+    public void updateUser(UserDto dto) {
+        User user = getUser(dto.getId());
+        user.setLogin(dto.getLogin());
+        user.setEmail(dto.getEmail());
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        userRepository.saveAndFlush(user);
+
     }
 
     @Transactional
@@ -84,5 +129,4 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ModelNotFoundException("User with id: " + id + " - not found!"));
     }
-
 }

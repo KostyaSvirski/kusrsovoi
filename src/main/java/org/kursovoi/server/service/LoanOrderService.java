@@ -7,13 +7,16 @@ import org.kursovoi.server.dto.LoanOrderDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.model.LoanOrder;
+import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.LoanOrderStatus;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.LoanOrderRepository;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumTooBigException;
+import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
 import org.kursovoi.server.util.mapper.LoanOrderMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,12 +32,23 @@ public class LoanOrderService {
 
     private final LoanOrderRepository loanOrderRepository;
     private final LoanService loanService;
-    private final UserService userService;
+    private UserService userService;
     private final LoanOrderMapper mapper;
 
     @Transactional
     public List<LoanOrderDto> findAllLoans() {
         return loanOrderRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<LoanOrderDto> findLoansOrdersOfUser(User user) {
+        return loanOrderRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<LoanOrderDto> findAllPendingLoans() {
+        return loanOrderRepository
+                .findByStatus(LoanOrderStatus.PENDING).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
@@ -72,7 +86,7 @@ public class LoanOrderService {
             throw new IncorrectStatusException("Forbidden due to status of user or order of deposit");
         }
         if (loanOrder.getSum() < dto.getSum()) {
-            throw new TransactionSumTooBigException("Balance of loan: " + loanOrder.getSum() + " - is less than transaction");
+            throw new TransactionSumTooLargeException("Balance of loan: " + loanOrder.getSum() + " - is less than transaction");
         }
         loanOrder.setSum(loanOrder.getSum() - dto.getSum());
         loanOrderRepository.save(loanOrder);

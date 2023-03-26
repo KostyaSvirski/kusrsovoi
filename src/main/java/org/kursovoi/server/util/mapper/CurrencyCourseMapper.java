@@ -7,12 +7,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Component
-public interface CurrencyCourseMapper {
+public abstract class CurrencyCourseMapper {
 
     @Mapping(target = "date", source = "date", dateFormat = "yyyy-MM-dd")
-    CurrencyCourseDto map(CurrencyCourse model);
+    public abstract CurrencyCourseDto map(CurrencyCourse model);
 
-    CurrencyCourse map(UpdateCurrencyCourseDto dto);
+    public abstract CurrencyCourse map(UpdateCurrencyCourseDto dto);
 }

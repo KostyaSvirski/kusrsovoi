@@ -7,12 +7,14 @@ import org.kursovoi.server.dto.DepositOrderDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.dto.UpdateSumDto;
 import org.kursovoi.server.model.DepositOrder;
+import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.DepositOrderStatus;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.DepositOrderRepository;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.DepositOrderMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,8 +29,8 @@ import java.util.stream.Collectors;
 public class DepositOrderService {
 
     private final DepositOrderRepository depositOrderRepository;
-    private final DepositeService depositeService;
-    private final UserService userService;
+    private final DepositService depositService;
+    private UserService userService;
     private final DepositOrderMapper mapper;
 
     @Transactional
@@ -37,8 +39,14 @@ public class DepositOrderService {
     }
 
     @Transactional
-    public DepositOrderDto findDepositOrder(long id) {
-        return mapper.map(getDepositOrder(id));
+    public List<DepositOrderDto> findDepositOrdersOfUser(User user) {
+        return depositOrderRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<DepositOrderDto> findAllPendingDeposits() {
+        return depositOrderRepository
+                .findByStatus(DepositOrderStatus.PENDING).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
@@ -49,9 +57,15 @@ public class DepositOrderService {
     }
 
     @Transactional
+    public DepositOrderDto findDepositOrder(long id) {
+        return mapper.map(getDepositOrder(id));
+    }
+
+
+    @Transactional
     public void createDepositOrder(CreateDepositDto dto) {
         var user = userService.getUser(dto.getIdUser());
-        var deposit = depositeService.findSpecificDeposit(dto.getIdDeposit());
+        var deposit = depositService.findSpecificDeposit(dto.getIdDeposit());
         var depositOrder = DepositOrder.builder()
                 .deposit(deposit)
                 .user(user)

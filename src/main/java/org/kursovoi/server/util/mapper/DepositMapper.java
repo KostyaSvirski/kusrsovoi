@@ -8,23 +8,23 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Component
-public interface DepositMapper {
+public abstract class DepositMapper {
 
-    @Mapping(target = "currency", qualifiedByName = "getCurrencyToString")
-    DepositDto map(Deposit deposit);
+    @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToString")
+    public abstract DepositDto map(Deposit deposit);
 
-    @Mapping(target = "currency", qualifiedByName = "getCurrencyToEnum")
-    Deposit map(DepositDto deposit);
+    @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToEnum")
+    public abstract Deposit map(DepositDto deposit);
 
     @Named("getCurrencyToString")
-    default String getCurrencyToString(Deposit deposit) {
-        return deposit.getCurrency().name();
+    public static String getCurrencyToString(Currency deposit) {
+        return deposit.name();
     }
 
     @Named("getCurrencyToEnum")
-    default Currency getCurrencyToEnum(DepositDto dto) {
-        return Currency.valueOf(dto.getCurrency());
+    public static Currency getCurrencyToEnum(String dto) {
+        return Currency.valueOf(dto);
     }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.OperationDto;
 import org.kursovoi.server.model.Operation;
+import org.kursovoi.server.model.User;
 import org.kursovoi.server.repository.OperationRepository;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.mapper.OperationMapper;
@@ -24,6 +25,11 @@ public class OperationService {
     @Transactional
     public List<OperationDto> getAllOperations() {
         return operationRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<OperationDto> findAllOperationsOfUser(User user) {
+        return operationRepository.findByUser(user).stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Transactional
