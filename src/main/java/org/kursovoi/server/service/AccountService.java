@@ -9,12 +9,10 @@ import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
-import org.kursovoi.server.util.exception.AccountInvalidException;
-import org.kursovoi.server.util.exception.IncorrectStatusException;
-import org.kursovoi.server.util.exception.ModelNotFoundException;
-import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
+import org.kursovoi.server.util.exception.*;
+import org.kursovoi.server.util.keycloak.RoleMapping;
+import org.kursovoi.server.util.keycloak.SecurityContextWrapper;
 import org.kursovoi.server.util.mapper.AccountMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +28,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private UserService userService;
     private final AccountMapper mapper;
+    private final SecurityContextWrapper securityContextWrapper;
 
     @Transactional
     public List<AccountDto> getAllAccounts() {
@@ -89,9 +88,16 @@ public class AccountService {
                 .orElseThrow(() -> new ModelNotFoundException("Account with id " + id + " not found!"));
     }
 
+
+    //TODO rewrite it with holderId uuid
     @Transactional
     public AccountDto getSpecificAccountDto(long id) {
-        return mapper.map(getSpecificAccount(id));
+        var account = mapper.map(getSpecificAccount(id));
+        if(securityContextWrapper.isUserHasRole(RoleMapping.USER)
+                && account.getHolderId() != Long.parseLong(securityContextWrapper.getIdUser())) {
+            throw new AccessDeniedException("Access denied for resource");
+        }
+        return account;
     }
 
 

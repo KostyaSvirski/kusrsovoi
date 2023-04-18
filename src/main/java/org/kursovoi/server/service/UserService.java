@@ -1,6 +1,5 @@
 package org.kursovoi.server.service;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.*;
 import org.kursovoi.server.model.Role;
@@ -12,8 +11,6 @@ import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.UserAlreadyExistsException;
 import org.kursovoi.server.util.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
