@@ -2,19 +2,19 @@ package org.kursovoi.server.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.kursovoi.server.dto.CreateDepositDto;
-import org.kursovoi.server.dto.DepositOrderDto;
-import org.kursovoi.server.dto.UpdateStatusDto;
-import org.kursovoi.server.dto.UpdateSumDto;
+import org.kursovoi.server.dto.*;
 import org.kursovoi.server.model.DepositOrder;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.DepositOrderStatus;
+import org.kursovoi.server.model.constant.OperationType;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.DepositOrderRepository;
+import org.kursovoi.server.util.exception.AccessDeniedException;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
+import org.kursovoi.server.util.keycloak.TokenUtil;
+import org.kursovoi.server.util.keycloak.RoleMapping;
 import org.kursovoi.server.util.mapper.DepositOrderMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,6 +32,9 @@ public class DepositOrderService {
     private final DepositService depositService;
     private UserService userService;
     private final DepositOrderMapper mapper;
+    private final TokenUtil tokenUtil;
+    private final OperationService operationService;
+
 
     @Transactional
     public List<DepositOrderDto> findAllDepositOrders() {
@@ -58,7 +61,13 @@ public class DepositOrderService {
 
     @Transactional
     public DepositOrderDto findDepositOrder(long id) {
-        return mapper.map(getDepositOrder(id));
+        var depositOrder = mapper.map(getDepositOrder(id));
+        if(tokenUtil.hasRole(RoleMapping.USER)
+                && !userService.getUser(depositOrder.getIdUser()).getUuid()
+                .equals(tokenUtil.getUUIDUser())) {
+            throw new AccessDeniedException("Access denied for resource");
+        }
+        return depositOrder;
     }
 
 
@@ -75,6 +84,7 @@ public class DepositOrderService {
                 .build();
         depositOrder.setDateOfEnd(depositOrder.getDateOfIssue().plusMonths(deposit.getMonthToExpire()));
         depositOrderRepository.save(depositOrder);
+        logOperation(OperationDescription.NEW_DEPOSIT_ORDER, OperationType.INFO, user.getId());
     }
 
     @Transactional
@@ -91,5 +101,12 @@ public class DepositOrderService {
     DepositOrder getDepositOrder(long id) {
         return depositOrderRepository.findById(id)
                 .orElseThrow(() -> new ModelNotFoundException("Deposit order with id: " + id + " - not found!"));
+    }
+
+    private void logOperation(OperationDescription description, OperationType type, long idUser) {
+        operationService.createOperation(OperationDto.builder()
+                .type(type.name())
+                .description(description.getMessage())
+                .idUser(idUser).build());
     }
 }

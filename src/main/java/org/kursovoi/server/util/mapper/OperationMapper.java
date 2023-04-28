@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public abstract class OperationMapper {
 
     @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToString")
+    @Mapping(target = "idUser", source = "user.id")
     public abstract OperationDto map(Operation model);
 
     @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToEnum")

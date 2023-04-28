@@ -31,30 +31,30 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/operations")
+    @GetMapping("{id}/operations")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<OperationDto>> findAllOperationsOfUser(@PathVariable long id) {
+    public ResponseEntity<List<OperationDto>> findAllOperationsOfUser(@PathVariable String id) {
         var operations = service.findAllOperationsOfUser(id);
         return new ResponseEntity<>(operations, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/loanOrders")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<LoanOrderDto>> findLoansOrdersOfUser(@PathVariable long id) {
+    public ResponseEntity<List<LoanOrderDto>> findLoansOrdersOfUser(@PathVariable String id) {
         var loanOrders = service.findLoansOrdersOfUser(id);
         return new ResponseEntity<>(loanOrders, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/depositOrders")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<DepositOrderDto>> findDepositOrdersOfUser(@PathVariable long id) {
+    public ResponseEntity<List<DepositOrderDto>> findDepositOrdersOfUser(@PathVariable String id) {
         var depositOrders = service.findDepositOrdersOfUser(id);
         return new ResponseEntity<>(depositOrders, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/accounts")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<AccountDto>> getAccountsOfUser(long id) {
+    public ResponseEntity<List<AccountDto>> getAccountsOfUser(@PathVariable String id) {
         var accounts = service.getAccountsOfUser(id);
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
@@ -87,6 +87,13 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
         service.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
+    public ResponseEntity<UserDto> getMe() {
+        var user = service.getMe();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
 

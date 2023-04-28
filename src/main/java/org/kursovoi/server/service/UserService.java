@@ -6,10 +6,10 @@ import org.kursovoi.server.model.Role;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.UserRepository;
-import org.kursovoi.server.util.exception.IncorrectPasswordException;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.UserAlreadyExistsException;
+import org.kursovoi.server.util.keycloak.TokenUtil;
 import org.kursovoi.server.util.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -26,18 +26,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
     private final OperationService operationService;
-
     private final LoanOrderService loanOrderService;
-
     private final DepositOrderService depositOrderService;
-
     private final AccountService accountService;
+    private final TokenUtil tokenUtil;
 
     @PostConstruct
     public void init() {
         loanOrderService.setUserService(this);
         depositOrderService.setUserService(this);
         accountService.setUserService(this);
+        operationService.setUserService(this);
     }
 
     @Transactional
@@ -50,19 +49,19 @@ public class UserService {
         return mapper.map(getUser(id));
     }
 
-    public List<OperationDto> findAllOperationsOfUser(long id) {
+    public List<OperationDto> findAllOperationsOfUser(String id) {
         return operationService.findAllOperationsOfUser(getUser(id));
     }
 
-    public List<LoanOrderDto> findLoansOrdersOfUser(long id) {
+    public List<LoanOrderDto> findLoansOrdersOfUser(String id) {
         return loanOrderService.findLoansOrdersOfUser(getUser(id));
     }
 
-    public List<DepositOrderDto> findDepositOrdersOfUser(long id) {
+    public List<DepositOrderDto> findDepositOrdersOfUser(String id) {
         return depositOrderService.findDepositOrdersOfUser(getUser(id));
     }
 
-    public List<AccountDto> getAccountsOfUser(long id) {
+    public List<AccountDto> getAccountsOfUser(String id) {
         return accountService.getAccountsOfUser(getUser(id));
     }
 
@@ -70,9 +69,6 @@ public class UserService {
     public void createUser(CreateUserDto userDto) {
         if (userRepository.findByLogin(userDto.getLogin()).isPresent()) {
             throw new UserAlreadyExistsException("User with login: " + userDto.getLogin() + " - already exist");
-        }
-        if (!userDto.getPassword().equals(userDto.getRepeatPassword())) {
-            throw new IncorrectPasswordException("Passwords didn't match");
         }
         var user = mapper.map(userDto);
         user.setStatus(Status.ACTIVE);
@@ -96,20 +92,6 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto authenticate(AuthRequestDto request) {
-        User user = userRepository.findByLogin(request.getLogin())
-                .orElseThrow(() -> new ModelNotFoundException("User with login: " + request.getLogin() + " - not found!"));
-        if (!user.getPassword().equals(request.getPassword())) {
-            throw new IncorrectPasswordException("Password is incorrect");
-        }
-        if (user.getStatus().equals(Status.ACTIVE)) {
-            return mapper.map(user);
-        } else {
-            throw new IncorrectPasswordException("User is not active");
-        }
-    }
-
-    @Transactional
     public void updateUser(UserDto dto) {
         User user = getUser(dto.getId());
         user.setLogin(dto.getLogin());
@@ -118,12 +100,23 @@ public class UserService {
         user.setSurname(dto.getSurname());
         user.setPhoneNumber(dto.getPhoneNumber());
         userRepository.saveAndFlush(user);
+    }
 
+    @Transactional
+    public UserDto getMe() {
+        var uuid = tokenUtil.getUUIDUser();
+        return mapper.map(getUser(uuid));
     }
 
     @Transactional
     User getUser(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ModelNotFoundException("User with id: " + id + " - not found!"));
+    }
+
+    @Transactional
+    User getUser(String uuid) {
+        return userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ModelNotFoundException("User with uuid: " + uuid + " - not found!"));
     }
 }

@@ -2,16 +2,15 @@ package org.kursovoi.server.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.kursovoi.server.dto.AccountDto;
-import org.kursovoi.server.dto.TransactionDto;
-import org.kursovoi.server.dto.UpdateStatusDto;
+import org.kursovoi.server.dto.*;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.User;
+import org.kursovoi.server.model.constant.OperationType;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.AccountRepository;
 import org.kursovoi.server.util.exception.*;
 import org.kursovoi.server.util.keycloak.RoleMapping;
-import org.kursovoi.server.util.keycloak.SecurityContextWrapper;
+import org.kursovoi.server.util.keycloak.TokenUtil;
 import org.kursovoi.server.util.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +25,26 @@ import java.util.stream.Collectors;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private UserService userService;
     private final AccountMapper mapper;
-    private final SecurityContextWrapper securityContextWrapper;
+    private final TokenUtil tokenUtil;
+    private final OperationService operationService;
+    private final EmailSenderService emailSenderService;
+    private UserService userService;
 
     @Transactional
     public List<AccountDto> getAllAccounts() {
         return accountRepository.findAll().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public AccountDto getSpecificAccountDto(long id) {
+        var account = mapper.map(getSpecificAccount(id));
+        if(tokenUtil.hasRole(RoleMapping.USER)
+                && !userService.getUser(account.getHolderId()).getUuid()
+                .equals(tokenUtil.getUUIDUser())) {
+            throw new AccessDeniedException("Access denied for resource");
+        }
+        return account;
     }
 
     @Transactional
@@ -47,6 +59,7 @@ public class AccountService {
         User user = userService.getUser(dto.getHolderId());
         newAccount.setHolder(user);
         accountRepository.saveAndFlush(newAccount);
+        logOperation(OperationDescription.NEW_ACCOUNT, OperationType.INFO, user.getId());
     }
 
     @Transactional
@@ -70,6 +83,10 @@ public class AccountService {
 
         accountRepository.save(accountTo);
         accountRepository.save(accountFrom);
+
+        logOperation(OperationDescription.MAKE_TRANSACTION, OperationType.TRANSACTION, accountFrom.getHolder().getId());
+
+        emailSenderService.sendTransactionReceipt(transaction, accountTo.getHolder().getEmail());
     }
 
     @Transactional
@@ -89,15 +106,11 @@ public class AccountService {
     }
 
 
-    //TODO rewrite it with holderId uuid
-    @Transactional
-    public AccountDto getSpecificAccountDto(long id) {
-        var account = mapper.map(getSpecificAccount(id));
-        if(securityContextWrapper.isUserHasRole(RoleMapping.USER)
-                && account.getHolderId() != Long.parseLong(securityContextWrapper.getIdUser())) {
-            throw new AccessDeniedException("Access denied for resource");
-        }
-        return account;
+    private void logOperation(OperationDescription description, OperationType type, long idUser) {
+        operationService.createOperation(OperationDto.builder()
+                .type(type.name())
+                .description(description.getMessage())
+                .idUser(idUser).build());
     }
 
 

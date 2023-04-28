@@ -6,8 +6,7 @@ import lombok.Data;
 public class CreateUserDto {
 
     private String login;
-    private String password;
-    private String repeatPassword;
+    private String uuid;
     private String name;
     private String surname;
     private String dateOfBirth;

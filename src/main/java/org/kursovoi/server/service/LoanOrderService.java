@@ -2,21 +2,20 @@ package org.kursovoi.server.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.kursovoi.server.dto.CreateLoanOrderDto;
-import org.kursovoi.server.dto.LoanOrderDto;
-import org.kursovoi.server.dto.UpdateStatusDto;
-import org.kursovoi.server.dto.UpdateSumDto;
+import org.kursovoi.server.dto.*;
 import org.kursovoi.server.model.LoanOrder;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.model.constant.LoanOrderStatus;
+import org.kursovoi.server.model.constant.OperationType;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.LoanOrderRepository;
+import org.kursovoi.server.util.exception.AccessDeniedException;
 import org.kursovoi.server.util.exception.IncorrectStatusException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
 import org.kursovoi.server.util.exception.TransactionSumTooLargeException;
+import org.kursovoi.server.util.keycloak.TokenUtil;
+import org.kursovoi.server.util.keycloak.RoleMapping;
 import org.kursovoi.server.util.mapper.LoanOrderMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,6 +33,8 @@ public class LoanOrderService {
     private final LoanService loanService;
     private UserService userService;
     private final LoanOrderMapper mapper;
+    private final TokenUtil tokenUtil;
+    private final OperationService operationService;
 
     @Transactional
     public List<LoanOrderDto> findAllLoans() {
@@ -53,7 +54,13 @@ public class LoanOrderService {
 
     @Transactional
     public LoanOrderDto findSpecificLoanOrder(long id) {
-        return mapper.map(findLoanOrder(id));
+        var loanOrder = mapper.map(findLoanOrder(id));
+        if(tokenUtil.hasRole(RoleMapping.USER)
+                && !userService.getUser(loanOrder.getIdUser()).getUuid()
+                .equals(tokenUtil.getUUIDUser())) {
+            throw new AccessDeniedException("Access denied for resource");
+        }
+        return loanOrder;
     }
 
     @Transactional
@@ -76,6 +83,7 @@ public class LoanOrderService {
                 .build();
         newLoanOrder.setDateOfEnd(newLoanOrder.getDateOfIssue().plusMonths(loan.getMonthsToReturn()));
         loanOrderRepository.save(newLoanOrder);
+        logOperation(OperationDescription.NEW_LOAN_ORDER, OperationType.INFO, user.getId());
     }
 
     @Transactional
@@ -97,5 +105,11 @@ public class LoanOrderService {
                 .orElseThrow(() -> new ModelNotFoundException("Loan order with id: " + id + " - not found!"));
     }
 
+    private void logOperation(OperationDescription description, OperationType type, long idUser) {
+        operationService.createOperation(OperationDto.builder()
+                .type(type.name())
+                .description(description.getMessage())
+                .idUser(idUser).build());
+    }
 
 }

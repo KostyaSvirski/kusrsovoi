@@ -9,17 +9,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SecurityContextWrapper {
+public class TokenUtil {
 
     private final KeycloakRealmRoleConverter converter;
 
-    public String getIdUser() {
+    public String getUUIDUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         JwtAuthenticationToken auth = (JwtAuthenticationToken) context.getAuthentication();
         return auth.getName();
     }
 
-    public boolean isUserHasRole(RoleMapping role) {
+    public boolean hasRole(RoleMapping role) {
         SecurityContext context = SecurityContextHolder.getContext();
         JwtAuthenticationToken auth = (JwtAuthenticationToken) context.getAuthentication();
         var roles = converter.convert(auth.getToken());

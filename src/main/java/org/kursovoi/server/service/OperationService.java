@@ -6,7 +6,10 @@ import org.kursovoi.server.dto.OperationDto;
 import org.kursovoi.server.model.Operation;
 import org.kursovoi.server.model.User;
 import org.kursovoi.server.repository.OperationRepository;
+import org.kursovoi.server.util.exception.AccessDeniedException;
 import org.kursovoi.server.util.exception.ModelNotFoundException;
+import org.kursovoi.server.util.keycloak.TokenUtil;
+import org.kursovoi.server.util.keycloak.RoleMapping;
 import org.kursovoi.server.util.mapper.OperationMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +23,10 @@ import java.util.stream.Collectors;
 public class OperationService {
 
     private final OperationRepository operationRepository;
+    private UserService userService;
     private final OperationMapper mapper;
+    private final TokenUtil tokenUtil;
+
 
     @Transactional
     public List<OperationDto> getAllOperations() {
@@ -34,12 +40,21 @@ public class OperationService {
 
     @Transactional
     public OperationDto getSpecificOperationDto(long id) {
-        return mapper.map(getOperation(id));
+        var operation = mapper.map(getOperation(id));
+        if(tokenUtil.hasRole(RoleMapping.USER)
+                && !userService.getUser(operation.getIdUser()).getUuid()
+                .equals(tokenUtil.getUUIDUser())) {
+            throw new AccessDeniedException("Access denied for resource");
+        }
+        return operation;
     }
 
     @Transactional
     public void createOperation(OperationDto dto) {
-        operationRepository.save(mapper.map(dto));
+        var user = userService.getUser(dto.getIdUser());
+        var operation = mapper.map(dto);
+        operation.setUser(user);
+        operationRepository.save(operation);
     }
 
     Operation getOperation(long id) {

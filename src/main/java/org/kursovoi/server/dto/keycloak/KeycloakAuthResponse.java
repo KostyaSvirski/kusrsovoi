@@ -1,8 +1,6 @@
 package org.kursovoi.server.dto.keycloak;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonKey;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
 import java.io.Serializable;

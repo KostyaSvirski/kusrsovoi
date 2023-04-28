@@ -2,10 +2,7 @@ package org.kursovoi.server.service;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.kursovoi.server.dto.ActivateCardDto;
-import org.kursovoi.server.dto.CardDto;
-import org.kursovoi.server.dto.ChangeStatusOfCardDto;
-import org.kursovoi.server.dto.CreateCardDto;
+import org.kursovoi.server.dto.*;
 import org.kursovoi.server.model.Card;
 import org.kursovoi.server.model.constant.Status;
 import org.kursovoi.server.repository.CardRepository;

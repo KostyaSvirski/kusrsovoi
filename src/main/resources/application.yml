@@ -29,6 +29,17 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/kursovoiRealm
           jwk-set-uri: http://localhost:8080/realms/kursovoiRealm/protocol/openid-connect/certs
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kursovoibankingnoreply@gmail.com
+    password: rcuthggmhekvtrtj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 keycloak:
   auth-url: http://localhost:8080/realms/kursovoiRealm/protocol/openid-connect/token
