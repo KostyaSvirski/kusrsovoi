@@ -31,31 +31,31 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("{id}/operations")
+    @GetMapping("{uuid}/operations")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<OperationDto>> findAllOperationsOfUser(@PathVariable String id) {
-        var operations = service.findAllOperationsOfUser(id);
+    public ResponseEntity<List<OperationDto>> findAllOperationsOfUser(@PathVariable String uuid) {
+        var operations = service.findAllOperationsOfUser(uuid);
         return new ResponseEntity<>(operations, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/loanOrders")
+    @GetMapping("/{uuid}/loanOrders")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<LoanOrderDto>> findLoansOrdersOfUser(@PathVariable String id) {
-        var loanOrders = service.findLoansOrdersOfUser(id);
+    public ResponseEntity<List<LoanOrderDto>> findLoansOrdersOfUser(@PathVariable String uuid) {
+        var loanOrders = service.findLoansOrdersOfUser(uuid);
         return new ResponseEntity<>(loanOrders, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/depositOrders")
+    @GetMapping("/{uuid}/depositOrders")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<DepositOrderDto>> findDepositOrdersOfUser(@PathVariable String id) {
-        var depositOrders = service.findDepositOrdersOfUser(id);
+    public ResponseEntity<List<DepositOrderDto>> findDepositOrdersOfUser(@PathVariable String uuid) {
+        var depositOrders = service.findDepositOrdersOfUser(uuid);
         return new ResponseEntity<>(depositOrders, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/accounts")
+    @GetMapping("/{uuid}/accounts")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<List<AccountDto>> getAccountsOfUser(@PathVariable String id) {
-        var accounts = service.getAccountsOfUser(id);
+    public ResponseEntity<List<AccountDto>> getAccountsOfUser(@PathVariable String uuid) {
+        var accounts = service.getAccountsOfUser(uuid);
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
@@ -66,10 +66,10 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/status")
+    @PutMapping("/{uuid}/status")
     @RolesAllowed({"ROLE_ADMIN"})
-    public ResponseEntity<?> updateUserStatus(@PathVariable long id, @RequestParam String newStatus) {
-        UpdateStatusDto dto = new UpdateStatusDto(newStatus, id);
+    public ResponseEntity<?> updateUserStatus(@PathVariable String uuid, @RequestParam String newStatus) {
+        UpdateUserStatusDto dto = new UpdateUserStatusDto(newStatus, uuid);
         service.updateUserStatus(dto);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

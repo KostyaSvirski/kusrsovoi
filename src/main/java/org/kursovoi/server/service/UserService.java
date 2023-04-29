@@ -77,11 +77,11 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserStatus(UpdateStatusDto newStatus) {
+    public void updateUserStatus(UpdateUserStatusDto newStatus) {
         if (Arrays.stream(Status.values()).map(Enum::name).noneMatch(status -> status.equals(newStatus.getNewStatus()))) {
             throw new IncorrectStatusException("Status is incorrect");
         }
-        var user = getUser(newStatus.getId());
+        var user = getUser(newStatus.getUuid());
         user.setStatus(Status.valueOf(newStatus.getNewStatus()));
         userRepository.save(user);
     }

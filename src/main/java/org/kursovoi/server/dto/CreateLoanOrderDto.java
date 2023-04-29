@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateLoanOrderDto {
 
-    private long idUser;
+    private String uuidUser;
     private long idLoan;
     private long sum;
 }

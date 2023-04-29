@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateDepositDto {
+public class UpdateUserStatusDto {
 
-    private String uuidUser;
-    private long idDeposit;
-    private long sum;
+    private String newStatus;
+    private String uuid;
 }

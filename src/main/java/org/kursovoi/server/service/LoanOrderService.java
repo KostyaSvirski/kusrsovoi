@@ -73,7 +73,7 @@ public class LoanOrderService {
     @Transactional
     public void createNewLoanOrder(CreateLoanOrderDto dto) {
         var loan = loanService.findSpecificLoan(dto.getIdLoan());
-        var user = userService.getUser(dto.getIdUser());
+        var user = userService.getUser(dto.getUuidUser());
         var newLoanOrder = LoanOrder.builder()
                 .loan(loan)
                 .user(user)

@@ -2,6 +2,7 @@ package org.kursovoi.server.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.kursovoi.server.dto.AccountDto;
+import org.kursovoi.server.dto.CreateAccountDto;
 import org.kursovoi.server.dto.TransactionDto;
 import org.kursovoi.server.dto.UpdateStatusDto;
 import org.kursovoi.server.service.AccountService;
@@ -37,7 +38,7 @@ public class AccountController {
 
     @PostMapping
     @RolesAllowed({"ROLE_USER"})
-    public ResponseEntity<?> createAccount(@RequestBody AccountDto dto) {
+    public ResponseEntity<?> createAccount(@RequestBody CreateAccountDto dto) {
         service.createAccount(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

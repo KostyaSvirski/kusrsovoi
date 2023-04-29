@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests(
-                        configurer -> configurer.antMatchers("/error", "/actuator/**")
+                        configurer -> configurer.antMatchers("/v3/**", "/swagger-ui/**", "/actuator/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

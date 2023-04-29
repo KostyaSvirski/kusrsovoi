@@ -1,6 +1,7 @@
 package org.kursovoi.server.util.mapper;
 
 import org.kursovoi.server.dto.AccountDto;
+import org.kursovoi.server.dto.CreateAccountDto;
 import org.kursovoi.server.model.Account;
 import org.kursovoi.server.model.constant.Currency;
 import org.kursovoi.server.model.constant.Status;
@@ -24,7 +25,7 @@ public abstract class AccountMapper {
 
     @Mapping(target = "dateOfIssue", source = "dateOfIssue", qualifiedByName = "getDateOfIssue")
     @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToEnum")
-    public abstract Account map(AccountDto dto);
+    public abstract Account map(CreateAccountDto dto);
 
     @Named("getCurrencyToString")
     public String getCurrencyToString(Currency currency) {

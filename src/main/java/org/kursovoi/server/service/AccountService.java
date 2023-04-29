@@ -53,10 +53,10 @@ public class AccountService {
     }
 
     @Transactional
-    public void createAccount(AccountDto dto) {
+    public void createAccount(CreateAccountDto dto) {
         Account newAccount = mapper.map(dto);
         newAccount.setStatus(Status.ACTIVE);
-        User user = userService.getUser(dto.getHolderId());
+        User user = userService.getUser(dto.getHolderUuid());
         newAccount.setHolder(user);
         accountRepository.saveAndFlush(newAccount);
         logOperation(OperationDescription.NEW_ACCOUNT, OperationType.INFO, user.getId());

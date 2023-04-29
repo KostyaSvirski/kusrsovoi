@@ -73,7 +73,7 @@ public class DepositOrderService {
 
     @Transactional
     public void createDepositOrder(CreateDepositDto dto) {
-        var user = userService.getUser(dto.getIdUser());
+        var user = userService.getUser(dto.getUuidUser());
         var deposit = depositService.findSpecificDeposit(dto.getIdDeposit());
         var depositOrder = DepositOrder.builder()
                 .deposit(deposit)
