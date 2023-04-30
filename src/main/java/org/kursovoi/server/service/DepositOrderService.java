@@ -84,7 +84,7 @@ public class DepositOrderService {
                 .build();
         depositOrder.setDateOfEnd(depositOrder.getDateOfIssue().plusMonths(deposit.getMonthToExpire()));
         depositOrderRepository.save(depositOrder);
-        logOperation(OperationDescription.NEW_DEPOSIT_ORDER, OperationType.INFO, user.getId());
+        logOperation(OperationDescription.NEW_DEPOSIT_ORDER, OperationType.ORDER, user.getId());
     }
 
     @Transactional

@@ -83,7 +83,7 @@ public class LoanOrderService {
                 .build();
         newLoanOrder.setDateOfEnd(newLoanOrder.getDateOfIssue().plusMonths(loan.getMonthsToReturn()));
         loanOrderRepository.save(newLoanOrder);
-        logOperation(OperationDescription.NEW_LOAN_ORDER, OperationType.INFO, user.getId());
+        logOperation(OperationDescription.NEW_LOAN_ORDER, OperationType.ORDER, user.getId());
     }
 
     @Transactional

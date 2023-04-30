@@ -2,10 +2,10 @@ package org.kursovoi.server.dto;
 
 public enum OperationDescription {
 
-    NEW_ACCOUNT("New account created"),
-    NEW_LOAN_ORDER("New loan order created"),
-    NEW_DEPOSIT_ORDER("New deposit order created"),
-    MAKE_TRANSACTION("Transaction released");
+    NEW_ACCOUNT("Создан нвоый счет"),
+    NEW_LOAN_ORDER("Создана заявка на кредит"),
+    NEW_DEPOSIT_ORDER("Создана заявка на вклад"),
+    MAKE_TRANSACTION("Транзакция совершена");
 
     private final String message;
 

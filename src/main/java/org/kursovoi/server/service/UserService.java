@@ -94,7 +94,6 @@ public class UserService {
     @Transactional
     public void updateUser(UserDto dto) {
         User user = getUser(dto.getId());
-        user.setLogin(dto.getLogin());
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
