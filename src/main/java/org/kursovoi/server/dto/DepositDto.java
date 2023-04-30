@@ -9,6 +9,6 @@ public class DepositDto {
 
     private long id;
     private double interest;
-    private long monthToExpire;
+    private long monthToReturn;
     private String currency;
 }
