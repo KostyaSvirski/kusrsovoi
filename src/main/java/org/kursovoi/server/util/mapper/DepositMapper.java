@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 public abstract class DepositMapper {
 
     @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToString")
-    @Mapping(target = "monthToReturn", source = "monthToExpire")
+    @Mapping(target = "monthsToReturn", source = "monthToExpire")
     public abstract DepositDto map(Deposit deposit);
 
     @Mapping(target = "currency", source = "currency", qualifiedByName = "getCurrencyToEnum")
-    @Mapping(target = "monthToExpire", source = "monthToReturn")
+    @Mapping(target = "monthToExpire", source = "monthsToReturn")
     public abstract Deposit map(DepositDto deposit);
 
     @Named("getCurrencyToString")
