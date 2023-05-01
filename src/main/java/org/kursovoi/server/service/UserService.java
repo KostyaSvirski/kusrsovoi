@@ -29,6 +29,7 @@ public class UserService {
     private final LoanOrderService loanOrderService;
     private final DepositOrderService depositOrderService;
     private final AccountService accountService;
+    private final EmailSenderService emailSenderService;
     private final TokenUtil tokenUtil;
 
     @PostConstruct
@@ -74,6 +75,8 @@ public class UserService {
         user.setStatus(Status.ACTIVE);
         user.setRole(new Role(2L, "user"));
         userRepository.save(user);
+
+        emailSenderService.sendConfirmationOfRegistration(userDto);
     }
 
     @Transactional

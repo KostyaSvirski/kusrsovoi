@@ -2,6 +2,7 @@ package org.kursovoi.server.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kursovoi.server.dto.CreateUserDto;
 import org.kursovoi.server.dto.TransactionDto;
 import org.kursovoi.server.dto.mail.EmailMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +51,23 @@ public class EmailSenderService {
 
         log.info("Email was sent to: " + transactionDto.getIdTo());
 
+    }
+
+    public void sendConfirmationOfRegistration(CreateUserDto dto) {
+        SimpleMailMessage mailMessage
+                = new SimpleMailMessage();
+
+        mailMessage.setFrom(from);
+        mailMessage.setText("Success registration for client " + dto.getUuid() + "\n" +
+                "login: " + dto.getLogin() + "\n" +
+                "password: " + dto.getPassword());
+        mailMessage.setSubject("CLIENT REGISTRATION");
+
+        mailMessage.setTo(dto.getEmail());
+
+        sender.send(mailMessage);
+
+        log.info("Email was sent to: " + dto.getEmail());
     }
 
 
