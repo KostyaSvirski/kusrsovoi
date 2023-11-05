@@ -8,12 +8,16 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Component
 @Mapper(componentModel = "spring")
 public abstract class OperationMapper {
 
     @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToString")
     @Mapping(target = "idUser", source = "user.id")
+    @Mapping(target = "timestamp", source = "timestamp", qualifiedByName = "getTimeToString")
     public abstract OperationDto map(Operation model);
 
     @Mapping(target = "type", source = "type", qualifiedByName = "getTypeToEnum")
@@ -27,5 +31,10 @@ public abstract class OperationMapper {
     @Named("getTypeToEnum")
     public OperationType getTypeToEnum(String dto) {
         return OperationType.valueOf(dto);
+    }
+
+    @Named("getTimeToString")
+    public String getTimeToString(LocalDateTime timestamp) {
+        return timestamp.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 }

@@ -19,8 +19,11 @@ public class OperationController {
 
     @GetMapping
     @RolesAllowed({"ROLE_ADMIN"})
-    public ResponseEntity<List<OperationDto>> getAllOperations() {
-        var operations = service.getAllOperations();
+    public ResponseEntity<List<OperationDto>> getAllOperations(
+            @RequestParam(required = false) String filterByType,
+            @RequestParam(required = false) String filterByStartDate,
+            @RequestParam(required = false) String filterByEndDate) {
+        var operations = service.getAllOperations(filterByType, filterByStartDate, filterByEndDate);
         return new ResponseEntity<>(operations, HttpStatus.OK);
     }
 

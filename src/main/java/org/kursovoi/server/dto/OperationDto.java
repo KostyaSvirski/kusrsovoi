@@ -12,5 +12,6 @@ public class OperationDto {
     private long id;
     private String type;
     private String description;
+    private String timestamp;
     private long idUser;
 }

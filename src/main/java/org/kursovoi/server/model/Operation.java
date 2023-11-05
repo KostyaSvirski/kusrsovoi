@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.kursovoi.server.model.constant.OperationType;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -16,6 +17,7 @@ public class Operation {
     private long id;
     private OperationType type;
     private String description;
+    private LocalDateTime timestamp;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne
